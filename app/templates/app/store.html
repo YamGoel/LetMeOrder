@@ -1,0 +1,39 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %} Store {% endblock title %} 
+
+{% block main-content %}
+    <h1 class="welcome_line">{{store_name}}</h1>
+    <h6 class="login-line">Add your products to the List</h6><br>
+    <a class="edit-line" href="{% url 'edit' storeID=request.session.storeid %}">click here to edit a product</a><br>
+
+    <div class="container">
+        <div class="row my-0">
+        <div class="col-sm-6 offset-sm-3">
+            <form action="" method="post" novalidate class="shadow p-5" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for fm in form %}
+                    {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                    <br>
+                {% endfor %}
+                <input type="submit" value="Add to Products" class="btn btn-primary"> <br>
+
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <p class="alert alert-danger my-3">{{error}}</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if messages %}
+                {% for msg in messages %}
+                    <div class="alert alert-{{msg.tags}}" role="alert">
+                        {{msg}}
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </form>
+        </div>
+        </div>
+    </div>
+    {% comment %} <h6 class="login-line">Login to continue your journey</h6> {% endcomment %}
+{% endblock main-content %}

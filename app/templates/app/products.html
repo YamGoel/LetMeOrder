@@ -1,0 +1,38 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %} Store {% endblock title %} 
+
+{% block main-content %}
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="list-group">
+                {% for a in title %}
+                <a href="{% url 'products-category' storeID=request.session.storeid cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
+                    {{a.product_category}}
+                </a>
+                {% endfor %}
+            </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="row">
+                    {% for prod in product %}
+                        <div class="col text-center mb4">
+                            <button type="submit" class="my-3 border-0 bg-transparent">
+                                <a href="#" class="btn">
+                                    <div>
+                                        <img src="{{prod.product_image.url}}" width="200px" height="130px" alt=""/>
+                                        <div class="fw-bold">{{prod.product_name}}</div>
+                                        <div class="fw-bold">
+                                            Rs.{{prod.product_price}}/-
+                                        </div>
+                                    </div>
+                                </a>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main-content %}

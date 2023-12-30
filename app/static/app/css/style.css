@@ -1,0 +1,35 @@
+body{
+    background-color: rgb(105,255,255);
+}
+
+.shadow{
+    background-color: aliceblue;
+}
+
+.nav-link{
+    color: rgb(47, 78, 67);
+}
+
+html{
+    background-color: rgb(218, 218, 218);
+}
+
+.welcome_line{
+    text-align: center;
+}
+.login-line{
+    text-align: center;
+}
+.edit-line{
+    text-align: center;
+    font-size: 11px;
+    text-decoration: none;
+    color: blue;
+    margin-top: -1rem;
+    font-weight: 500;
+}
+
+.plus,.minus{
+    text-decoration: none;
+    cursor: pointer;
+}

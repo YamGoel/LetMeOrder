@@ -1,0 +1,66 @@
+{% extends "app/cartbase.html" %}
+{% load static %}
+{% block title %} Cart {% endblock title %} 
+
+{% block main-content %}
+
+<div class="container my-2">
+    <div class="row">
+        {% if cartitems %}
+        <h1 class="text-center mb-4">Food Cart</h1>
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Cart</h3>
+                    {% for item in cartitems %}
+                    <div class="row">
+                        <div class="col-sm-3 text-center align-self-center"> <img src="{{item.product_image.url}}" alt="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150"> </div>
+                        <div class="col-sm-9">
+                            <div>
+                                <h5>{{item.product_name}}</h5>
+                                <p class="mb-2 text-muted small">{{item.product_category}}</p>
+                                <div class="my-3">
+                                    <label for="quantity">Quantity:</label>
+                                    <a class="minus mx-2 minus-cart" pid={{item.productid}} >-</a>
+                                    <span id="quantity">{{item.quantity}}</span>
+                                    <a class="plus mx-2 plus-cart" pid={{item.productid}}>+</a>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-sm btn-secondary mr-3 remove-cart" pid={{item.productid}}> Remove Item </a>
+                                    <p class="mb-0"> <span> <strong> Rs. {{item.product_price}}</strong> </span> </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="text-muted">
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Total Amount:</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0"> Amount <span id="amount"> Rs. {{amount}}</span> </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0"> Parcel Charges <span id="parcel" class="d-flex"> Rs. <p id = "parcel_amount"> {{parcelamount}} </p></span> </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                            <div>
+                                <strong>Total</strong> <small>(including GST)</small>
+                            </div>
+                            <span id="totalamount" class="font-weight-bold"> {{totalamount}}</span>
+                        </li>
+                    </ul>
+                    <div class="d-grid"> <a href="#" class="btn btn-primary"> Place Order </a> </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <h1 class="text-center mb-5">Cart is Empty</h1>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock main-content %}

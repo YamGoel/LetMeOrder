@@ -1,0 +1,89 @@
+{% extends "app/userbase.html" %}
+{% load static %}
+{% block title %} User View {% endblock title %} 
+
+{% block main-content %}
+<div class="container my-2">
+    <h2 class="">{{store_name}}</h2>
+    <h5 class="text-center"> So, What's your pick for today? </h5><br>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="list-group">
+                <a href="{% url 'user-view' storeID=request.session.storeid %}" class="list-group-item list-group-item-action" aria-current="true">
+                    All
+                </a>
+            {% for a in title %}
+            <a href="{% url 'user-products-category' storeID=request.session.storeid cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
+                {{a.product_category}}
+            </a>
+            {% endfor %}
+        </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="row">
+                {% for prod in product %}
+                    <div class="col text-center mb4">
+                            <a href="{% url 'add-to-cart' storeID=request.session.storeid pid=prod.productid %}" class="btn">
+                                <div>
+                                    <img src="{{prod.product_image.url}}" width="300px" height="200px" alt=""/>
+                                    <div class="fw-bold">{{prod.product_name}}</div>
+                                    <div class="fw-bold">
+                                        Rs.{{prod.product_price}}/-
+                                    </div>
+                                </div>
+                            </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% if added %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Item Added</h5>
+          </div>
+          <div class="modal-body text-center">
+            <p>Your item has been added to the cart.</p><br>
+            <p>--Tap outside the box to continue--</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      $(document).ready(function(){
+        $('#myModal').modal('show');
+      });
+    </script>
+  {% endif %}
+  {% if already_added %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Item Already Added!</h5>
+          </div>
+          <div class="modal-body text-center">
+            <p>Item already in cart.</p><br>
+            <p>Go to cart to increase quantity.</p><br>
+            <p>--Tap outside the box to continue--</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      $(document).ready(function(){
+        $('#myModal').modal('show');
+      });
+    </script>
+  {% endif %}
+</div>
+
+{% endblock main-content %}
