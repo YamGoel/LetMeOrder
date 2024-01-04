@@ -1,0 +1,97 @@
+body{
+    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(255, 248, 203); */
+    width: 100%;
+    
+}
+
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
+.title{
+    background-color: rgb(55, 55, 55);
+}
+
+.intro{
+    font-family: cursive;
+    padding: 6rem;
+}
+
+.logo{
+    width: 30%;
+    height: auto;
+    border: 1px solid black;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.intro-text{
+    font-weight: 900;
+    /* font-size: 5vh; */
+}
+
+.boy{
+    width: 100%;
+    height: auto;
+}
+
+.we{
+    width: 100%;
+    height: auto;
+}
+.info{
+    width: 80%;
+    height: auto;
+}
+
+.knowledge{
+    width: 100%;
+    height: auto;
+}
+
+.contact{
+    height: 200px;
+    width: 100%;
+    background-color: rgb(55, 55, 55);
+}
+
+.contact-text{
+    font-weight: 900;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top: 3rem;
+    color: rgb(255, 255, 255);
+}
+
+.phone, .mail{
+    font-weight: 700;
+    margin-top: -1rem;
+    color: rgb(255, 255, 255);
+}
+
+.social{
+    margin-top: 6rem;
+}
+
+.linkedin, .insta, .portfolio, .artfolio{
+    margin: 2rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+footer{
+    width: 100%;
+    margin-bottom: 0;
+    background-color: rgb(46, 46, 46);
+}

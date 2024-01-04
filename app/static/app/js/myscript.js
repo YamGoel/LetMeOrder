@@ -54,3 +54,19 @@ $('.remove-cart').click(function(){
         }
     })
 })
+
+$('.order-completed').click(function(){
+    var id = $(this).attr("oid").toString()
+    var eml = this
+    $.ajax({
+        type:"GET",
+        url:"/ordercompleted",
+        data:{
+            orderid:id
+        },
+        success:function(data){
+            var sid = data.storeid
+            eml.parentNode.parentNode.parentNode.parentNode.remove()
+        }
+    })
+})

@@ -1,0 +1,46 @@
+{% extends "app/orderbase.html" %}
+{% load static %}
+{% block title %} Orders {% endblock title %} 
+
+{% block main-content %}
+{% block content %}
+<div class="container justify-content-center">
+<h1 class="text-center">Orders</h1>
+    <div class="card">
+        <div class="card-body">
+            {% for grouping_value, orders in grouped_orders.items %}
+            <div class="row justify-content-center">
+                <div class="order-container bg-dark-subtle mx-5 col-sm-7">
+                    <h4 class="text-body-emphasis my-2">New Order</h4>
+                    <hr class="bg-black">
+                    <div class="d-flex">
+                        <div>
+                            {% for order in orders %}
+                            <div class="d-flex">
+                                <h6 class="mx-2">{{ order.product_name }} :</h6>
+                                <h6 class="mx-2"> {{ order.quantity }}</h6>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="ms-auto">
+                            <a class="btn btn-sm btn-secondary order-completed" oid="{{grouping_value}}"> Completed </a><br>
+                            <hr class="bg-black">
+                            {% for order in orders %}
+                                {% if order.parcel == 'Yes' and forloop.first %}
+                                    <h6 class="mx-2">Parcel: Yes</h6>
+                                {% elif order.parcel == 'No' and forloop.first %}
+                                    <h6 class="mx-2">Parcel: No</h6>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <br><br>
+                    </div> 
+                </div>
+            </div>
+            <br>
+            {% endfor %}
+        </div>            
+    </div>
+</div>
+{% endblock %}
+{% endblock main-content %}

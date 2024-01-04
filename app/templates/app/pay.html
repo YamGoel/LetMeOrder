@@ -1,0 +1,53 @@
+{% extends "app/cartbase.html" %}
+{% load static %}
+{% block title %} Pay {% endblock title %} 
+
+{% block main-content %}
+
+<div class="container text-center">
+    {% if nopaymethod %}
+        <br><br><br><br><br><br><br>
+        <h2 class='text-dark-emphasis my-4'> Opps! Sorry!</h2>
+        <h2 class='text-dark-emphasis my-4'> Store is currently not taking online payments.</h2>
+        <h2 class='text-dark-emphasis my-4'> Kindly order and pay at the store desk.</h2>
+    {% else %}
+        <h3 class='text-dark-emphasis my-5'> Please make the payment of Rs.{{totalamount}}</h3> 
+        <button id="rzp-button1" type="button" class="btn btn-primary "> Pay </button> 
+    {% endif %}
+</div>
+
+{% endblock main-content %}
+
+{% block payment-gateway %}
+
+<script>
+    var options = {
+        "key": "{{keyid}}",
+        "amount": "{{razoramount}}",
+        "currency": "INR",
+        "name": "its.pixelate",
+        "description": "Test Transaction",
+        "order_id": "{{order_id}}",
+        "handler": function (response){
+            window.location.href = `http://localhost:8000/paymentdone?order_id=${response.razorpay_order_id}&payment_id=${response.razorpay_payment_id}`
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+{% endblock payment-gateway %}

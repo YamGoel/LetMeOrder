@@ -3,9 +3,9 @@
 {% block title %} Store {% endblock title %} 
 
 {% block main-content %}
-    <h1 class="welcome_line">{{store_name}}</h1>
+    <h1 class="welcome_line my-1">{{store_name}}</h1>
     <h6 class="login-line">Add your products to the List</h6><br>
-    <a class="edit-line" href="{% url 'edit' storeID=request.session.storeid %}">click here to edit a product</a><br>
+    <a class="edit-line" href="{% url 'edit' %}">click here to edit a product</a><br>
 
     <div class="container">
         <div class="row my-0">
@@ -34,6 +34,13 @@
             </form>
         </div>
         </div>
+        <ul class="nav justify-content-center my-3">
+            <li class="nav-item">
+              <a class="btn btn-dark mx-1" aria-current="page" href="{% url 'logout' %}">Logout</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-dark mx-1" href="{% url 'setupstore' %}">Setup Store</a>
+            </li>
+            <ul>
     </div>
-    {% comment %} <h6 class="login-line">Login to continue your journey</h6> {% endcomment %}
 {% endblock main-content %}

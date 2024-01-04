@@ -1,0 +1,40 @@
+{% extends "app/orderbase.html" %}
+{% load static %}
+{% block title %} Setup Your Store {% endblock title %} 
+
+{% block main-content %}
+
+<h1 class="welcome_line my-1">{{store_name}}</h1>
+<h6 class="text-center">Hey, setup your payment here! </h6><br><br>
+<h4 class="text-center">Enter your Razorpay Key ID and Key Secret below: </h4> <br> <br>
+
+<div class="container">
+    <div class="row my-0">
+    <div class="col-sm-6 offset-sm-3">
+        <form action="" method="post" novalidate class="shadow p-5">
+            {% csrf_token %}
+            {% for fm in form %}
+                {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                <br>
+            {% endfor %}
+            <input type="submit" value="Setup" class="btn btn-primary"> <br>
+
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="alert alert-danger my-3">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+            {% for msg in messages %}
+                <div class="alert alert-{{msg.tags}}" role="alert">
+                    {{msg}}
+                </div>
+            {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+    </div>
+</div>
+
+{% endblock main-content %}

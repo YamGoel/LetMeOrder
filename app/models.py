@@ -8,6 +8,8 @@ class Store(models.Model):
     store_city=models.CharField(max_length=100,null=True)
     password=models.CharField(max_length=20)
     category=models.CharField(max_length=100)
+    rkeyid=models.CharField(max_length=100, default="", null = False)
+    keysecret=models.CharField(max_length=100, default="", null = False)
 
     def __str__(self):
         return self.store_name
@@ -37,3 +39,38 @@ class Cart(models.Model):
 
     def __str__(self):
         return self.storeid
+
+STATUS_CHOICES = (
+    ('Preparing','Preparing'),
+    ('Prepared','Prepared'),
+)
+
+class Payment(models.Model):
+    storeid = models.CharField(max_length=100, null=True)
+    amount = models.FloatField()
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_status = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    paid = models.BooleanField(default = False)
+
+class Orders(models.Model):
+    storeid = models.CharField(max_length=100, null=True)
+    orderid = models.CharField(max_length=100, null=True)
+    productid = models.CharField(max_length=100, null=True)
+    product_name = models.CharField(max_length=100,null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    order_date = models.DateTimeField(auto_now_add = True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, default="")
+    parcel = models.CharField(max_length=100, default = "No")
+    # @property
+    # def total_cost(self):
+    #     return self.quantity * self.productid.product_price
+
+class CompletedOrders(models.Model):
+    storeid = models.CharField(max_length=100, null=True)
+    orderid = models.CharField(max_length=100, null=True)
+    productid = models.CharField(max_length=100, null=True)
+    product_name = models.CharField(max_length=100,null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    order_date = models.DateTimeField(auto_now_add = True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, default="")

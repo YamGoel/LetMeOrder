@@ -1,6 +1,6 @@
 {% extends "app/base.html" %}
 {% load static %}
-{% block title %} Store {% endblock title %} 
+{% block title %} Products {% endblock title %} 
 
 {% block main-content %}
     <div class="container my-5">
@@ -8,7 +8,7 @@
             <div class="col-sm-3">
                 <div class="list-group">
                 {% for a in title %}
-                <a href="{% url 'products-category' storeID=request.session.storeid cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
+                <a href="{% url 'products-category' cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
                     {{a.product_category}}
                 </a>
                 {% endfor %}

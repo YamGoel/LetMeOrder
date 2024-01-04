@@ -21,7 +21,7 @@
                                 <p class="mb-2 text-muted small">{{item.product_category}}</p>
                                 <div class="my-3">
                                     <label for="quantity">Quantity:</label>
-                                    <a class="minus mx-2 minus-cart" pid={{item.productid}} >-</a>
+                                    <a class="minus mx-2 minus-cart" pid={{item.productid}}>-</a>
                                     <span id="quantity">{{item.quantity}}</span>
                                     <a class="plus mx-2 plus-cart" pid={{item.productid}}>+</a>
                                 </div>
@@ -52,7 +52,9 @@
                             <span id="totalamount" class="font-weight-bold"> {{totalamount}}</span>
                         </li>
                     </ul>
-                    <div class="d-grid"> <a href="#" class="btn btn-primary"> Place Order </a> </div>
+                    <div class="d-grid"> 
+                        <a href={% url "pay" %} class="btn btn-primary "> Place Order </a> 
+                    </div>
                     </div>
                 </div>
             </div>
@@ -64,3 +66,4 @@
 </div>
 
 {% endblock main-content %}
+
