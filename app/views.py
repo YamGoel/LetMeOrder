@@ -249,6 +249,8 @@ def payment_done(request):
 
 class placedView(View):
     def get(self, request):
+        if 'storeid' not in request.session:
+            return redirect('/login/')
         storeID = request.session.get('storeid')
         return render(request, 'app/placed.html', locals())
 
