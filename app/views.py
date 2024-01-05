@@ -264,9 +264,9 @@ class parcelView(View):
 class payView(View):
     def get(self, request):
         storeID = request.session.get('storeid')
-        request.session['storeid'] = storeID
         if 'storeid' not in request.session:
             return redirect('/login/')
+        request.session['storeid'] = storeID
         cartitems = Cart.objects.filter(storeid=storeID)
         amount = 0
         for p in cartitems:
