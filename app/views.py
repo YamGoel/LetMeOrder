@@ -233,6 +233,7 @@ def payment_done(request):
     payment_id = request.GET.get('payment_id')
 
     storeID = request.session.get('storeid')
+    request.session['storeid'] = storeID
 
     payment = Payment.objects.get(razorpay_order_id = order_id)
     payment.paid = True
@@ -248,7 +249,8 @@ def payment_done(request):
 
 class placedView(View):
     def get(self, request):
-        return render(request, 'app/placed.html')
+        storeID = request.session.get('storeid')
+        return render(request, 'app/placed.html', locals())
 
 class parcelView(View):
     def get(self, request):
@@ -262,6 +264,7 @@ class parcelView(View):
 class payView(View):
     def get(self, request):
         storeID = request.session.get('storeid')
+        request.session['storeid'] = storeID
         if 'storeid' not in request.session:
             return redirect('/login/')
         cartitems = Cart.objects.filter(storeid=storeID)
