@@ -8,6 +8,7 @@ class Store(models.Model):
     store_city=models.CharField(max_length=100,null=True)
     password=models.CharField(max_length=20)
     category=models.CharField(max_length=100)
+    qrcode = models.ImageField(upload_to='qr/', blank=True, null=True)
     rkeyid=models.CharField(max_length=100, default="", null = False)
     keysecret=models.CharField(max_length=100, default="", null = False)
 
@@ -20,7 +21,7 @@ class Product(models.Model):
     product_name=models.CharField(max_length=100)
     product_price=models.CharField(max_length=20)
     product_category=models.CharField(max_length=200)
-    product_image=models.ImageField(upload_to='product')
+    product_image=models.ImageField(upload_to='product/', blank=True, null=True)
 
     def __str__(self):
         return self.product_name
@@ -33,7 +34,7 @@ class Cart(models.Model):
     product_name=models.CharField(max_length=100)
     product_price=models.CharField(max_length=20)
     product_category=models.CharField(max_length=200)
-    product_image=models.ImageField(upload_to='cart')
+    product_image=models.ImageField()
     quantity=models.IntegerField(null=True)
     parcel = models.CharField(max_length=50, default="No")
 

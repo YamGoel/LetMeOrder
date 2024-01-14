@@ -25,6 +25,7 @@ class AddStoreForm(forms.Form):
     store_city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    qrcode = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control'}))
 
 class EditProductForm(forms.Form):
     product_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'autofocus': 'True', 'class': 'form-control'}))

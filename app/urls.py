@@ -7,11 +7,15 @@ from django.conf.urls import handler404, handler500
 urlpatterns = [
     path('', views.home),
     path('addstore/', views.addStoreView.as_view(), name="addStore"),
+    path('termsandconditions/', views.termsView.as_view(), name="termsandco"),
+    path('privacypolicy/', views.privacyView.as_view(), name="privacypolicy"),
+    path('contact/', views.contactView.as_view(), name="contact"),
+    path('refund/', views.refundView.as_view(), name="refund"),
 
     ###STORE###
     path('store/<slug:storeID>', views.store.as_view(),name="store"),
-    path('store/setupstore', views.setupStore.as_view(),name="setupstore"),
-    path('store/edit', views.editView.as_view(),name="edit"),
+    path('store/setup/paysetup', views.setupStore.as_view(),name="setupstore"),
+    path('store/edit/products', views.editView.as_view(),name="edit"),
     path('store/edit/<id>', views.editProductView.as_view(),name="edit-product"),
     path('store/edit/<pid>/deleted', views.deleteProductView.as_view(),name="delete"),
 
@@ -26,6 +30,9 @@ urlpatterns = [
     path('userview/', views.userView.as_view(),name="user-view"),
     path('userview/<cat>', views.userProductCategoryView.as_view(),name="user-products-category"),
     path('userview/parcel/', views.parcelView.as_view(),name="parcel"),
+
+    ### QR VIEW ###
+    path('userview/order/<slug:storeID>', views.qrUserView.as_view(),name="user-view"),
 
     ### CART ###
     path('store/cart/no-parcel', views.cartView.as_view(),name="cart"),

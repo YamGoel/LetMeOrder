@@ -5,9 +5,9 @@
 {% block main-content %}
 <div class="container my-2">
     <h2 class="">{{store_name}}</h2>
-    <h5 class="text-center"> So, What's your pick for today? </h5><br>
+    <h5 class="text-center"> So, What's your pick for today? Click to add items to cart!</h5><br>
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-3 justify-content-center text-center">
             <div class="list-group">
                 <a href="{% url 'user-view' %}" class="list-group-item list-group-item-action" aria-current="true">
                     All
@@ -16,6 +16,12 @@
             <a href="{% url 'user-products-category' cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
                 {{a.product_category}}
             </a>
+            {% endfor %}
+	    <hr>
+            <p class="text-center">Or scan here to order<p>
+            
+            {% for qr in qrcode %}
+              <img src="{{ qr.qrcode.url }}" width="150vh" height="150vh" alt="QR CODE"/>
             {% endfor %}
         </div>
         </div>

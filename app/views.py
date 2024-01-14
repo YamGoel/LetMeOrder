@@ -30,7 +30,6 @@ class store(View):
     def post(self,request, storeID):
         form = AddProductForm(request.POST, request.FILES, storeID)
         if form.is_valid():
-            messages.success(request,"New product has been added successfully.")
             product = Product(
                 storeid = storeID,
                 product_name=form.cleaned_data['product_name'],
@@ -39,7 +38,7 @@ class store(View):
                 product_image=form.cleaned_data['product_image']
             )
             product.save()
-            
+            messages.success(request,"New product has been added successfully.")
         else:
             messages.warning(request,"Input Valid Data")
         return render(request, "app/store.html",locals())
@@ -74,7 +73,7 @@ class addStoreView(View):
         form = AddStoreForm()
         return render(request, 'app/addstore.html', locals())
     def post(self,request):
-        form = AddStoreForm(request.POST)
+        form = AddStoreForm(request.POST, request.FILES)
         if form.is_valid():
             storeid = request.POST['storeid']
             store_username = request.POST['store_username']
@@ -82,15 +81,21 @@ class addStoreView(View):
             store_city = request.POST['store_city']
             password = request.POST['password']
             category = request.POST['category']
-            Store(
+            qrcode= request.FILES.get('qrcode')
+            store = Store.objects.filter(storeid=storeid)
+            if store:
+                messages.warning(request,"Store ID already exists.")
+            else:
+                Store(
                 storeid = storeid,
                 store_username=store_username,
                 store_name=store_name,
                 store_city=store_city,
                 password=password,
                 category=category,
+		qrcode=qrcode,
                 ).save()
-            messages.success(request,"Store added successfully.")
+                messages.success(request,"Store added successfully.")
         else:
             messages.warning(request,"Input Valid Data")
         return render(request, "app/addstore.html",locals())
@@ -176,6 +181,16 @@ class userView(View):
         storeID = request.session.get('storeid')
         store_name = request.session.get('store_name')
         product = Product.objects.filter(storeid=storeID)
+        qrcode = Store.objects.filter(storeid=storeID)
+        title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
+        return render(request, "app/userview.html", locals())
+
+class qrUserView(View):
+    def get(self, request, storeID):
+        request.session['storeid'] = storeID
+        store_name = request.session.get('store_name')
+        product = Product.objects.filter(storeid=storeID)
+        qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
         return render(request, "app/userview.html", locals())
 
@@ -186,6 +201,7 @@ class userProductCategoryView(View):
         storeID = request.session.get('storeid')
         store_name = request.session.get('store_name')
         product = Product.objects.filter(storeid=storeID, product_category=cat)
+        qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
         return render(request, "app/userview.html", locals())
 
@@ -330,8 +346,9 @@ def add_to_cart(request, pid):
 
         cart.save()
         product = Product.objects.filter(storeid=storeID)
+        qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", {'product' : product, 'title':title, 'added': True, 'store_name':store_name})
+        return render(request, "app/userview.html", {'product' : product,'qrcode': qrcode, 'title':title, 'added': True, 'store_name':store_name})
 
 def plus_cart(request):
     if request.method == 'GET':
@@ -499,3 +516,19 @@ class PasswordResetView(View):
 class aboutUsView(View):
     def get(self, request):
         return render(request, 'app/aboutus.html') 
+    
+class termsView(View):
+    def get(self, request):
+        return render(request, 'app/termsandco.html') 
+    
+class privacyView(View):
+    def get(self, request):
+        return render(request, 'app/privacypolicy.html') 
+
+class contactView(View):
+    def get(self, request):
+        return render(request, 'app/contact.html') 
+    
+class refundView(View):
+    def get(self, request):
+        return render(request, 'app/refund.html') 

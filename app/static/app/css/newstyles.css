@@ -36,32 +36,38 @@ html {
     border-bottom: 0px;
 }
 
-.intro-text{
-    font-weight: 900;
-    /* font-size: 5vh; */
+.first{
+    width: 100%;
 }
 
 .boy{
-    width: 100%;
+    width: 70%;
     height: auto;
 }
 
 .about{
-    width: 100%;
+    width: 85%;
     height: auto;
 }
 
 .we{
-    width: 100%;
+    width: 85%;
     height: auto;
 }
+
+.flow{
+    width: 85%;
+    
+    height: auto;
+}
+
 .info{
-    width: 80%;
+    width: 75%;
     height: auto;
 }
 
 .knowledge{
-    width: 100%;
+    width: 75%;
     height: auto;
 }
 
