@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
 import razorpay
+import random
 from . models import Product
 from . models import Store
 from . models import Cart
@@ -180,6 +181,12 @@ class userView(View):
             return redirect('/login/')
         storeID = request.session.get('storeid')
         store_name = request.session.get('store_name')
+        ######################
+        if 'orderid' not in request.session:
+            orderid = random.randint(10000000, 99999999)
+            request.session['orderid'] = orderid
+            print(orderid)
+        ######################
         product = Product.objects.filter(storeid=storeID)
         qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
@@ -188,7 +195,12 @@ class userView(View):
 class qrUserView(View):
     def get(self, request, storeID):
         request.session['storeid'] = storeID
-        store_name = request.session.get('store_name')
+        store_name = Store.objects.filter(storeid=storeID).values('store_name')
+        ######################
+        if 'orderid' not in request.session:
+            orderid = random.randint(10000000, 99999999)
+            request.session['orderid'] = orderid
+        ######################
         product = Product.objects.filter(storeid=storeID)
         qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
@@ -213,7 +225,8 @@ class cartView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        cartitems = Cart.objects.filter(storeid=storeID)
+        orderid = request.session.get('orderid')
+        cartitems = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         parcelamount=0
         parcel = 'No'
@@ -231,7 +244,8 @@ class cartParcelView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        cartitems = Cart.objects.filter(storeid=storeID)
+        orderid = request.session.get('orderid')
+        cartitems = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         parcelamount = 5
         parcel = 'Yes'
@@ -256,7 +270,8 @@ def payment_done(request):
     payment.razorpay_payment_id = payment_id
     payment.save()
     parcel = request.session.get('parcel')
-    cart = Cart.objects.filter(storeid = storeID)
+    oid = request.session.get('orderid')
+    cart = Cart.objects.filter(storeid = storeID, orderid = oid)
     for c in cart:
         pro = Product.objects.filter(storeid=storeID, productid = c.productid).first()
         Orders(storeid=storeID, orderid = order_id, productid = c.productid, product_name = pro.product_name, quantity = c.quantity, parcel = parcel, payment = payment).save()
@@ -268,6 +283,7 @@ class placedView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
+        del request.session['orderid']
         return render(request, 'app/placed.html', locals())
 
 class parcelView(View):
@@ -285,7 +301,8 @@ class payView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         request.session['storeid'] = storeID
-        cartitems = Cart.objects.filter(storeid=storeID)
+        orderid = request.session.get('orderid')
+        cartitems = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartitems:
             if p.parcel == 'Yes':
@@ -325,19 +342,28 @@ class payView(View):
 
 def add_to_cart(request, pid):
     storeID = request.session.get('storeid')
-    check = Cart.objects.filter(storeid = storeID, productid = pid).exists()
+    orderid = request.session.get('orderid')
+    print(orderid)
+    check = Cart.objects.filter(storeid = storeID, productid = pid, orderid = orderid).exists()
     if check:
         store_name = request.session.get('store_name')
         product = Product.objects.filter(storeid=storeID)
+        qrcode = Store.objects.filter(storeid=storeID)
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", {'product' : product, 'title':title, 'already_added': True, 'store_name':store_name})
+        return render(request, "app/userview.html", {'product' : product, 'qrcode':qrcode, 'title':title, 'already_added': True, 'store_name':store_name})
     else:
         store_name = request.session.get('store_name')
+
+        
+        ###########ADD RANDOM ID##############
+        orderid = request.session.get('orderid')
+        #########################
+
         productname = Product.objects.filter(storeid=storeID, productid=pid).values('product_name').first()
         productprice = Product.objects.filter(storeid=storeID, productid=pid).values('product_price').first()
         productcategory = Product.objects.filter(storeid=storeID, productid=pid).values('product_category').first()
         productimage = Product.objects.filter(storeid=storeID, productid=pid).values('product_image').first()
-        cart, created = Cart.objects.get_or_create(storeid=storeID, productid=pid,
+        cart, created = Cart.objects.get_or_create(orderid = orderid, storeid=storeID, productid=pid,
             product_name = productname['product_name'], product_price = productprice['product_price']
             , product_category = productcategory['product_category'], product_image = productimage['product_image'], defaults={'quantity': 1})
 
@@ -354,10 +380,11 @@ def plus_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
         storeID = request.session.get("storeid")
-        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id)
+        orderid = request.session.get('orderid')
+        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id, orderid = orderid)
         cartitem.quantity+=1
         cartitem.save()
-        cartdata = Cart.objects.filter(storeid=storeID)
+        cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
             value = int(p.quantity) * int(p.product_price)
@@ -374,11 +401,12 @@ def minus_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
         storeID = request.session.get("storeid")
-        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id)
+        orderid = request.session.get('orderid')
+        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id, orderid = orderid)
         if(cartitem.quantity > 1):
             cartitem.quantity-=1
             cartitem.save()
-        cartdata = Cart.objects.filter(storeid=storeID)
+        cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
             value = int(p.quantity) * int(p.product_price)
@@ -395,9 +423,10 @@ def remove_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
         storeID = request.session.get("storeid")
-        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id)
+        orderid = request.session.get('orderid')
+        cartitem = Cart.objects.get(storeid=storeID, productid = prod_id, orderid = orderid)
         cartitem.delete()
-        cartdata = Cart.objects.filter(storeid=storeID)
+        cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
             value = int(p.quantity) * int(p.product_price)
@@ -532,3 +561,7 @@ class contactView(View):
 class refundView(View):
     def get(self, request):
         return render(request, 'app/refund.html') 
+    
+class offerView(View):
+    def get(self, request):
+        return render(request, 'app/offerpage.html') 

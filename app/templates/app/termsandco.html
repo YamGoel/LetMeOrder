@@ -1,10 +1,21 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CEJR3RGY2N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CEJR3RGY2N');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
     <title>LetMeOrder - Terms and Privacy</title>
     <style>
         body {
@@ -16,6 +27,11 @@
 <body>
 
     <div class="">
+	<ul class="nav justify-content-center my-3">
+        <li class="nav-item">
+          <a class="btn btn-outline-dark" aria-current="page" href="/">Home</a>
+        </li>
+      </ul>
             <div class="col-md-8">
                 <h2>Terms and Conditions</h2>
                 <hr>
@@ -35,6 +51,9 @@
                 <h4>Order Placement and Payment</h4>
                 <p>Once an order is placed and payment is made, it is considered final.</p>
                 <p>Orders cannot be canceled or refunded after payment is processed.</p>   
+
+		<h4>Payment Gateway</h4>
+                <p>Payments are done through the Razorpay Payment Gateway. Razropay charges a 2% for the settlement to your bank account.</p>
 
                 <h4>Refunds</h4>
                 <p>No refunds will be provided after an order has been placed and payment has been processed.</p>   

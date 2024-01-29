@@ -41,33 +41,32 @@ html {
 }
 
 .boy{
-    width: 70%;
+    width: 75%;
     height: auto;
 }
 
 .about{
-    width: 85%;
+    width: 100%;
     height: auto;
 }
 
 .we{
-    width: 85%;
+    width: 95%;
     height: auto;
 }
 
 .flow{
-    width: 85%;
-    
+    width: 95%;
     height: auto;
 }
 
 .info{
-    width: 75%;
+    width: 95%;
     height: auto;
 }
 
 .knowledge{
-    width: 75%;
+    width: 95%;
     height: auto;
 }
 
@@ -105,4 +104,19 @@ footer{
     width: 100%;
     margin-bottom: 0;
     background-color: rgb(46, 46, 46);
+}
+
+.offerbtn{
+    width: 80%;
+}
+
+.offercontainer{
+    background-color: #FFC487;
+    height: 130vh;
+    padding-bottom: 5rem;
+}
+
+.offerimg{
+    max-width: 85%;
+    height: auto;
 }

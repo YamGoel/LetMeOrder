@@ -29,6 +29,7 @@ class Product(models.Model):
     
 class Cart(models.Model):
     cartid = models.BigAutoField(primary_key=True)
+    orderid=models.IntegerField(max_length=100)
     storeid=models.CharField(max_length=100, null=True)
     productid=models.IntegerField(null=True)
     product_name=models.CharField(max_length=100)

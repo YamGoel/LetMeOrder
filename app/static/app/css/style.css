@@ -1,5 +1,8 @@
 body{
-    background-color: rgb(249, 249, 249);
+    /* background-color: rgb(249, 249, 249); */
+    background: url("../images/back3.png");
+    background-repeat: no-repeat;
+    background-size: auto;
 
 }
 
@@ -53,8 +56,8 @@ html{
 }
 
 .homeboy{
-    width: 90%;
-
+    height: 50%;
+    width: 100%;
 }
 
 footer{
@@ -66,4 +69,11 @@ footer{
 .home{
     background-image: linear-gradient(to right, rgb(60, 60, 60), rgb(0, 0, 0), rgb(0, 0, 0), rgb(60, 60, 60));
     border-radius: 40px;
+    height: 55vh;
+}
+
+/* Orders */
+.orders{
+    background: url("../images/back3.png");
+    border: 0px;
 }

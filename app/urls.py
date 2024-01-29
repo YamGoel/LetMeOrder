@@ -11,6 +11,7 @@ urlpatterns = [
     path('privacypolicy/', views.privacyView.as_view(), name="privacypolicy"),
     path('contact/', views.contactView.as_view(), name="contact"),
     path('refund/', views.refundView.as_view(), name="refund"),
+    path('offer/', views.offerView.as_view(), name="offer"),
 
     ###STORE###
     path('store/<slug:storeID>', views.store.as_view(),name="store"),
@@ -37,7 +38,7 @@ urlpatterns = [
     ### CART ###
     path('store/cart/no-parcel', views.cartView.as_view(),name="cart"),
     path('store/cart/parcel/', views.cartParcelView.as_view(),name="cartParcel"),
-    path('store/userview/addedtocart/<pid>', views.add_to_cart,name="add-to-cart"),
+    path('userview/addedtocart/<pid>', views.add_to_cart,name="add-to-cart"),
     path('store/allorders/', views.allOrdersView.as_view(), name='all_orders'),
 
     path('pluscart/', views.plus_cart),

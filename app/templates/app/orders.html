@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container justify-content-center">
 <h1 class="text-center">Orders</h1>
-    <div class="card">
+    <div class="card orders">
         <div class="card-body">
             {% for grouping_value, orders in grouped_orders.items %}
             <div class="row justify-content-center">
@@ -42,5 +42,14 @@
         </div>            
     </div>
 </div>
+<script>
+    function autoRefresh() {
+        setTimeout(function () {
+            location.reload();
+            console.log("HUA")
+        }, 7000);
+    }
+    window.onload = autoRefresh;
+</script>
 {% endblock %}
 {% endblock main-content %}

@@ -15,7 +15,7 @@ class ProductModelAdmin(admin.ModelAdmin):
     list_display = ['storeid','productid','product_name','product_price','product_category','product_image']
 @admin.register(Cart)
 class CartModelAdmin(admin.ModelAdmin):
-    list_display = ['cartid','storeid','productid','product_name','product_price','product_category','product_image','quantity','parcel']
+    list_display = ['orderid','cartid','storeid','productid','product_name','product_price','product_category','product_image','quantity','parcel']
 @admin.register(Payment)
 class CartModelAdmin(admin.ModelAdmin):
     list_display = ['storeid','amount','razorpay_order_id','razorpay_payment_status','razorpay_payment_id','paid']
