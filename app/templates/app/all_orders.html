@@ -10,19 +10,24 @@
         <div class="card-body">
             {% for grouping_value, orders in grouped_orders.items %}
             <div class="row justify-content-center">
-                <div class="order-container bg-dark-subtle mx-5 col-sm-7">
-                    <div >
+                <div class="order-container text-white bg-dark rounded-4 mx-5 col-sm-7">
+                    <div class="text-center">
+                        {% for order in orders %}
+                                {% if forloop.first %}
+                                    <h6 class="text-body-emphasis text-warning my-2"> {{order.order_date}} </h6>
+                                {% endif %}
+                            {% endfor %}
+                            <hr class="bg-black">
                         <div>
                             {% for order in orders %}
-                            <div class="d-flex text-center my-3">
-                                <h5 class="mx-2">{{ order.product_name }} :</h5>
-                                <h5 class="mx-2"> {{ order.quantity }}</h5>
-                                <h5 class="text-body-emphasis mx-5"> {{order.order_date}} </h5>
-                            </div>
-                            
-                        {% endfor %}
-                        <hr class="bg-black">
+                                <div class="d-flex text-center my-1">
+                                    <h6 class="mx-1">{{ order.product_name }} :</h6>
+                                    <h6 class="mx-1"> {{ order.quantity }}</h6>
+                                </div>
+                            {% endfor %}
+                        
                         </div>
+                        
                         <br>
                     </div> 
                 </div>

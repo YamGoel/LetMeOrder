@@ -10,8 +10,8 @@
         <div class="card-body">
             {% for grouping_value, orders in grouped_orders.items %}
             <div class="row justify-content-center">
-                <div class="order-container bg-dark-subtle mx-5 col-sm-7">
-                    <h4 class="text-body-emphasis my-2">New Order</h4>
+                <div class="order-container text-white bg-dark rounded-4 mx-5 col-sm-7">
+                    <h4 class="text-body-emphasis text-warning my-2">New Order</h4>
                     <hr class="bg-black">
                     <div class="d-flex">
                         <div>
@@ -46,7 +46,6 @@
     function autoRefresh() {
         setTimeout(function () {
             location.reload();
-            console.log("HUA")
         }, 7000);
     }
     window.onload = autoRefresh;

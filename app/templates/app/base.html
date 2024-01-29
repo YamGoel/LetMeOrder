@@ -15,28 +15,33 @@
 <body class="d-flex flex-column min-vh-100">
       <ul class="nav justify-content-center my-3">
         <li class="nav-item">
-          <a class="btn btn-dark mx-1" aria-current="page" href="{% url 'store' storeID=request.session.storeid %}">Home</a>
+          <a class="btn btn-dark mx-1 my-1" aria-current="page" href="{% url 'store' storeID=request.session.storeid %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-dark mx-1" href="{% url 'products' %}">Products</a>
+          <a class="btn btn-dark mx-1 my-1" href="{% url 'products' %}">Products</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-dark mx-1" href="{% url 'user-view' %}">User View</a>
+          <a class="btn btn-dark mx-1 my-1" href="{% url 'orders' %}">Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-dark mx-1 my-1" href="{% url 'all_orders' %}">Completed Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-dark mx-1 my-1" href="{% url 'user-view' %}">User View</a>
         </li>
       </ul>
-      <ul class="nav justify-content-center my-1">
+      {% comment %} <ul class="nav justify-content-center my-1">
         <li class="nav-item">
           <a class="btn btn-dark mx-1" href="{% url 'orders' %}">Orders</a>
         </li>
         <li class="nav-item">
           <a class="btn btn-dark mx-1" href="{% url 'all_orders' %}">Completed Orders</a>
         </li>
-        
-      </ul>
+      </ul> {% endcomment %}
 
       {% block main-content %}{% endblock main-content %}
-
-      <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top"> 
+      <br><br>
+      <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top fixed-bottom"> 
         <div class="d-flex align-items-center">
           <span class="mb-3 mb-md-0 text-body-primary text-light">© 2023, its.pixelate</span>
         </div>

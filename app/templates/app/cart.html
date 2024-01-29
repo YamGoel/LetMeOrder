@@ -7,10 +7,10 @@
 <div class="container my-2">
     <div class="row">
         {% if cartitems %}
-        <h1 class="text-center mb-4">Food Cart</h1>
+        <h1 class="text-center mb-4" style="font-family:baskerville, serif; font-weight: 800;">Food Cart</h1>
         <div class="col-sm-8">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body text-white bg-dark rounded-4">
                     <h3>Cart</h3>
                     {% for item in cartitems %}
                     <div class="row">
@@ -32,14 +32,14 @@
                             </div>
                         </div>
                     </div>
-                    <hr class="text-muted">
+                    <hr class="" style="background-color: white; height: 2px; border: 0;">
                     {% endfor %}
                 </div>
             </div>
         </div>
 
         <div class="col-sm-4">
-            <div class="card">
+            <div class="card rounded-3">
                 <div class="card-body">
                     <h3>Total Amount:</h3>
                     <ul class="list-group">

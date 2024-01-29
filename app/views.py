@@ -476,7 +476,7 @@ class allOrdersView(View):
         storeID = request.session.get('storeid')
         orders = CompletedOrders.objects.filter(storeid=storeID).order_by('orderid')
         grouped_orders = {}
-        for order in orders:
+        for order in reversed(orders):
             grouping_value = order.orderid
             if grouping_value not in grouped_orders:
                 grouped_orders[grouping_value] = []

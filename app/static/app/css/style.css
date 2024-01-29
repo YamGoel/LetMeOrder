@@ -1,7 +1,5 @@
 body{
-    /* background-color: rgb(249, 249, 249); */
     background: url("../images/back3.png");
-    background-repeat: no-repeat;
     background-size: auto;
 
 }
@@ -70,6 +68,17 @@ footer{
     background-image: linear-gradient(to right, rgb(60, 60, 60), rgb(0, 0, 0), rgb(0, 0, 0), rgb(60, 60, 60));
     border-radius: 40px;
     height: 55vh;
+}
+
+@media screen and (max-width: 600px){
+    .home{
+        height: 37vh;
+    }
+    .homeboy{
+        margin-top: -5vh;
+        height: 40%;
+        width: 100%;
+    }
 }
 
 /* Orders */
