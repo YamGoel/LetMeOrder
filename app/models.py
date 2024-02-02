@@ -75,7 +75,7 @@ class CompletedOrders(models.Model):
     productid = models.CharField(max_length=100, null=True)
     product_name = models.CharField(max_length=100,null=True)
     quantity = models.PositiveIntegerField(default=1)
-    order_date = models.DateTimeField(auto_now_add = True)
+    order_date = models.DateField()
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE, default="")
 
 class Feedback(models.Model):

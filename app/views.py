@@ -460,7 +460,7 @@ def order_completed(request):
         orderitem = Orders.objects.filter(storeid=storeID, orderid = orderid)
         for o in orderitem:
             pro = Product.objects.filter(storeid=storeID, productid = o.productid).first()
-            CompletedOrders(storeid=storeID, orderid = orderid, productid = o.productid, product_name = pro.product_name, quantity = o.quantity, payment = o.payment).save()
+            CompletedOrders(storeid=storeID, orderid = orderid, productid = o.productid, product_name = pro.product_name, quantity = o.quantity, order_date = o.order_date, payment = o.payment).save()
         orderitem.delete()
         data={
             'storeid':storeID
