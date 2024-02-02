@@ -32,8 +32,14 @@ html{
 .welcome_line{
     text-align: center;
 }
+
+.feedback{
+    margin-top: -1rem;
+}
+
 .login-line{
     text-align: center;
+    margin-top: -3rem;
 }
 .edit-line{
     text-align: center;
@@ -85,4 +91,15 @@ footer{
 .orders{
     background: url("../images/back3.png");
     border: 0px;
+}
+
+.feedback-box{
+    width: 10rem;
+    height: 20rem;
+}
+
+.small-input {
+    width: 150px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    font-size: 12px; /* Adjust the font size as needed */
 }

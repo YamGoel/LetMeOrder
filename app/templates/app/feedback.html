@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
+    <title>Feedback Form</title>
+    <style>
+        body {
+            padding: 5px;
+        }
+
+        .feeback-box {
+            background-color: #262626;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .feeback-box h1 {
+            color: #343a40; /* Bootstrap dark text color */
+        }
+
+        .btn-outline-dark {
+            border-color: #343a40; /* Bootstrap dark border color */
+            color: #343a40; /* Bootstrap dark text color */
+        }
+
+        .btn-outline-dark:hover {
+            background-color: #343a40; /* Bootstrap dark background color on hover */
+            color: #ffffff; /* White text on hover */
+        }
+    </style>
+</head>
+<body>
+    <ul class="nav justify-content-center my-3">
+        <li class="nav-item">
+          <a class="btn btn-outline-dark" aria-current="page" href="/">Home</a>
+        </li>
+    </ul>
+
+    <div class="container text-center text-white feeback-box">
+        <h1 class="my-1 text-warning" style="font-family: 'Baskerville', serif; font-weight: 800;">Feedback Form</h1>
+        <h6>Your feedback helps us grow</h6>
+        <h6>Kindly provide your valuable opinion</h6>
+
+        <div class="row mt-3">
+            <div class="col-md-6 offset-md-3 text-black " style="font-family: 'Baskerville', serif; font-weight: 800;">
+                <form action="" method="post" novalidate class="shadow p-4">
+                    {% csrf_token %}
+                    {% for fm in form %}
+                        <div class="mb-3">
+                            {{ fm.label_tag }} <br>
+                            {{ fm }}
+                            <small class="text-danger">{{ fm.errors|striptags }}</small>
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <p class="alert alert-danger my-3">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <div class="alert alert-{{ msg.tags }} my-3" role="alert">
+                                {{ msg }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </form>
+            </div>
+            <br>
+            <h5 class="my-3 text-warning" style="font-family: 'Baskerville', serif; font-weight: 800;">Feedbacks</h5>
+            <br>
+            <ul class="nav row my-3">
+                <li class="nav-item mx-3 my-1 col-sm-2 bg-danger">Name</li>
+                <li class="nav-item mx-3 my-1 col-sm-3 bg-primary">Email</li>
+                <li class="nav-item mx-3 my-1 col-sm-5 bg-secondary">Feedback</li>
+            </ul> 
+            {% for a in feedbacks %}
+                <ul class="nav row my-2">
+                    <li class="nav-item mx-3 col-sm-2 text-warning">{{a.name}}</li>
+                    <li class="nav-item mx-3 col-sm-3 text-info">{{a.email}}</li>
+                    <li class="nav-item mx-3 col-sm-5">{{a.feedback}}</li>
+                </ul>
+                <hr>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+</html>

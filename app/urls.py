@@ -12,6 +12,8 @@ urlpatterns = [
     path('contact/', views.contactView.as_view(), name="contact"),
     path('refund/', views.refundView.as_view(), name="refund"),
     path('offer/', views.offerView.as_view(), name="offer"),
+    path('feedback/', views.feedbackView.as_view(), name="feedback"),
+    path('userfeedback/', views.userFeedbackView.as_view(), name="userfeedback"),
 
     ###STORE###
     path('store/<slug:storeID>', views.store.as_view(),name="store"),

@@ -9,10 +9,12 @@ from . models import Cart
 from . models import Payment
 from . models import Orders
 from . models import CompletedOrders
+from . models import Feedback
 from django.db import models
-from . forms import AddProductForm, LoginForm, MyPasswordResetForm, EditProductForm, SetupStoreForm, AddStoreForm
+from . forms import AddProductForm, FeedbackForm, LoginForm, MyPasswordResetForm, EditProductForm, SetupStoreForm, AddStoreForm
 from django.contrib import messages
 from django.conf import settings
+from datetime import datetime
 
 ########## HOME ######
 def home(request):
@@ -272,9 +274,17 @@ def payment_done(request):
     parcel = request.session.get('parcel')
     oid = request.session.get('orderid')
     cart = Cart.objects.filter(storeid = storeID, orderid = oid)
+    current_date = datetime.now().date()
+    sameday = Orders.objects.filter(order_date = current_date)
+    if sameday:
+        max_ordernumber = Orders.objects.filter(order_date=current_date).aggregate(max_ordernumber=models.Max('ordernumber'))['max_ordernumber']
+        order_number = max_ordernumber+1
+    else:
+        order_number = 1
+    request.session['ordernumber'] = order_number
     for c in cart:
         pro = Product.objects.filter(storeid=storeID, productid = c.productid).first()
-        Orders(storeid=storeID, orderid = order_id, productid = c.productid, product_name = pro.product_name, quantity = c.quantity, parcel = parcel, payment = payment).save()
+        Orders(storeid=storeID, orderid = order_id, ordernumber = order_number, productid = c.productid, product_name = pro.product_name, quantity = c.quantity, order_date = current_date, parcel = parcel, payment = payment).save()
         c.delete()
     return redirect("placed")
 
@@ -283,7 +293,7 @@ class placedView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        del request.session['orderid']
+        # del request.session['orderid']
         return render(request, 'app/placed.html', locals())
 
 class parcelView(View):
@@ -565,3 +575,43 @@ class refundView(View):
 class offerView(View):
     def get(self, request):
         return render(request, 'app/offerpage.html') 
+    
+class feedbackView(View):
+    def get(self, request):
+        form = FeedbackForm()
+        feedbacks = Feedback.objects.all().order_by('-feed_id')
+        return render(request, "app/feedback.html",{'form':form, 'feedbacks':feedbacks})
+    def post(self,request):
+        form = FeedbackForm(request.POST)
+        feedbacks = Feedback.objects.all().order_by('-feed_id')
+        if form.is_valid():
+            feedback = Feedback(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                feedback=form.cleaned_data['feedback'],
+            )
+            feedback.save()
+            messages.success(request,"Feedback sent successfully.")
+        else:
+            messages.warning(request,"Input Valid Data")
+        return render(request, "app/feedback.html",{'form':form, 'feedbacks':feedbacks})
+    
+class userFeedbackView(View):
+    def get(self, request):
+        form = FeedbackForm()
+        feedbacks = Feedback.objects.all().order_by('-feed_id')
+        return render(request, "app/userfeedback.html",{'form':form, 'feedbacks':feedbacks})
+    def post(self,request):
+        form = FeedbackForm(request.POST)
+        feedbacks = Feedback.objects.all().order_by('-feed_id')
+        if form.is_valid():
+            feedback = Feedback(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                feedback=form.cleaned_data['feedback'],
+            )
+            feedback.save()
+            messages.success(request,"Feedback sent successfully.")
+        else:
+            messages.warning(request,"Input Valid Data")
+        return render(request, "app/userfeedback.html",{'form':form, 'feedbacks':feedbacks})

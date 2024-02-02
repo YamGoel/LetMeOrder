@@ -11,12 +11,15 @@
 	<link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
 	<title>About Us</title>
 </head>
-<body class="d-flex flex-column ">
+<body class="d-flex flex-column aboutus">
 
 	<ul class="nav justify-content-center my-3">
         <li class="nav-item">
           <a class="btn btn-outline-dark" aria-current="page" href="/">Home</a>
         </li>
+		<li class="nav-item">
+			<a class="btn btn-outline-dark mx-1" aria-current="page" href="{% url 'feedback' %}"> Feedback </a>
+		</li>
       </ul>
 	  <div class="container justify-content-center title">
 		<h2 class="text-light text-center my-4 font-italic">LetMeOrder.in</h2>

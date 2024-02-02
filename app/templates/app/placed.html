@@ -6,11 +6,17 @@
 
 <div class="container text-center">
     <br><br>
-    <h2  class="text-dark-emphasis text-center my-5"> Your order has been placed</h2>
+    <h3  class="text-dark-emphasis text-center my-4"> Your order has been placed, Order Number: {{ request.session.ordernumber }}</h3>
     <hr>
-    <h1 class="text-dark-emphasis text-center my-5"> Thank You for choosing us </h1>
+    <h1 class="text-dark-emphasis text-center my-3"> Thank You for choosing us </h1>
+    <ul class="nav justify-content-center my-1">
+		<li class="nav-item">
+			<a class="btn btn-outline-dark mx-1" aria-current="page" href="{% url 'userfeedback' %}"> How was your Experience? </a>
+		</li>
+      </ul>
     <hr>
     <h4 class="text-dark-emphasis text-center my-5"> Order will be ready soon</h4>
+    
 </div>
 
 {% endblock main-content %}

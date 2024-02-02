@@ -33,6 +33,10 @@ class EditProductForm(forms.Form):
     product_category = forms.ChoiceField(required=False, choices=PRODUCT_CATEGORIES, widget=forms.Select(attrs={'class': 'form-control'}), initial='')
     product_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
 
+class FeedbackForm(forms.Form):
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autofocus': 'True', 'class': 'form-control'}))
+    email = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    feedback = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 35}), required=True)
 
 class SetupStoreForm(forms.Form):
     key_id = forms.CharField(widget=forms.TextInput(attrs={'autofocus': 'True', 'class': 'form-control'}))

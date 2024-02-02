@@ -58,10 +58,11 @@ class Payment(models.Model):
 class Orders(models.Model):
     storeid = models.CharField(max_length=100, null=True)
     orderid = models.CharField(max_length=100, null=True)
+    ordernumber = models.PositiveIntegerField(default=0)
     productid = models.CharField(max_length=100, null=True)
     product_name = models.CharField(max_length=100,null=True)
     quantity = models.PositiveIntegerField(default=1)
-    order_date = models.DateTimeField(auto_now_add = True)
+    order_date = models.DateField()
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE, default="")
     parcel = models.CharField(max_length=100, default = "No")
     # @property
@@ -76,3 +77,9 @@ class CompletedOrders(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     order_date = models.DateTimeField(auto_now_add = True)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE, default="")
+
+class Feedback(models.Model):
+    feed_id = models.BigAutoField(primary_key=True)
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=100)
+    feedback=models.TextField(max_length=1000)
