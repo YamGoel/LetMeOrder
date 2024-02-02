@@ -10,7 +10,7 @@ from . models import Feedback
 # Register your models here.
 @admin.register(Store)
 class StoreModelAdmin(admin.ModelAdmin):
-    list_display = ['storeid','store_username','store_name','store_city','category','qrcode']
+    list_display = ['storeid','store_username','store_name','store_address','category','qrcode']
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
     list_display = ['storeid','productid','product_name','product_price','product_category','product_image']

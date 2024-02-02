@@ -22,7 +22,7 @@ class AddStoreForm(forms.Form):
     storeid = forms.CharField(widget=forms.TextInput(attrs={'autofocus': 'True', 'class': 'form-control'}))
     store_username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     store_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    store_city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    store_address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     category = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     qrcode = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control'}))

@@ -12,6 +12,12 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <title>LetMeOrder | {% block title %}  {% endblock title %}</title>
+    <script>
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', function () {
+          history.pushState(null, null, document.URL);
+      });
+  </script>
 </head> 
 <body class="d-flex flex-column min-vh-100">
       <ul class="nav justify-content-center my-3">

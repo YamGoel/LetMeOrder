@@ -5,7 +5,7 @@ class Store(models.Model):
     storeid=models.CharField(primary_key=True, max_length=10)
     store_username=models.CharField(max_length=100)
     store_name=models.CharField(max_length=100)
-    store_city=models.CharField(max_length=100,null=True)
+    store_address=models.CharField(max_length=100,null=True)
     password=models.CharField(max_length=20)
     category=models.CharField(max_length=100)
     qrcode = models.ImageField(upload_to='qr/', blank=True, null=True)

@@ -81,7 +81,7 @@ class addStoreView(View):
             storeid = request.POST['storeid']
             store_username = request.POST['store_username']
             store_name = request.POST['store_name']
-            store_city = request.POST['store_city']
+            store_address = request.POST['store_address']
             password = request.POST['password']
             category = request.POST['category']
             qrcode= request.FILES.get('qrcode')
@@ -93,7 +93,7 @@ class addStoreView(View):
                 storeid = storeid,
                 store_username=store_username,
                 store_name=store_name,
-                store_city=store_city,
+                store_address=store_address,
                 password=password,
                 category=category,
 		qrcode=qrcode,
@@ -183,6 +183,7 @@ class userView(View):
             return redirect('/login/')
         storeID = request.session.get('storeid')
         store_name = request.session.get('store_name')
+        store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
         ######################
         if 'orderid' not in request.session:
             orderid = random.randint(10000000, 99999999)
@@ -198,6 +199,7 @@ class qrUserView(View):
     def get(self, request, storeID):
         request.session['storeid'] = storeID
         store_name = Store.objects.filter(storeid=storeID).values('store_name')
+        store_address = Store.objects.filter(storeid=storeID).values('store_address')
         ######################
         if 'orderid' not in request.session:
             orderid = random.randint(10000000, 99999999)
