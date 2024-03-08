@@ -19,6 +19,7 @@
         <li class="nav-item">
           <a class="btn btn-dark" aria-current="page" href="{% url 'user-view' %}">Back to Products</a>
         </li>
+        {% block clearbtn %}  {% endblock clearbtn %}
       </ul>
 
       {% block main-content %} {% endblock main-content %}
@@ -26,7 +27,7 @@
 
       <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top fixed-bottom"> 
         <div class="d-flex align-items-center">
-          <span class="mb-3 mb-md-0 text-body-primary text-light">© 2023, its.pixelate</span>
+          <span class="mb-3 mb-md-0 text-body-primary text-light">Copyright : 2023 || Developed by : YG Corp.</span>
         </div>
       </footer>
 

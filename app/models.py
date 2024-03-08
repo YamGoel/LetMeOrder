@@ -6,9 +6,12 @@ class Store(models.Model):
     store_username=models.CharField(max_length=100)
     store_name=models.CharField(max_length=100)
     store_address=models.CharField(max_length=100,null=True)
+    store_pincode = models.CharField(max_length=100,null=True)
+    store_timings=models.CharField(max_length=100, null=True)
     password=models.CharField(max_length=20)
     category=models.CharField(max_length=100)
     qrcode = models.ImageField(upload_to='qr/', blank=True, null=True)
+    status = models.CharField(max_length=100)
     rkeyid=models.CharField(max_length=100, default="", null = False)
     keysecret=models.CharField(max_length=100, default="", null = False)
 
@@ -29,7 +32,7 @@ class Product(models.Model):
     
 class Cart(models.Model):
     cartid = models.BigAutoField(primary_key=True)
-    orderid=models.IntegerField(max_length=100)
+    orderid=models.IntegerField()
     storeid=models.CharField(max_length=100, null=True)
     productid=models.IntegerField(null=True)
     product_name=models.CharField(max_length=100)

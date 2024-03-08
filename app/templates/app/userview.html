@@ -1,51 +1,101 @@
 {% extends "app/userbase.html" %}
 {% load static %}
-{% block title %} User View {% endblock title %} 
+{% block title %} {{store_name}} {% endblock title %} 
 
 {% block main-content %}
 <div class="container my-2">
     <h2 class="">{{store_name}}</h2>
     <p> <span class="font-weight-bold"> Address: </span> {{store_address.store_address}} </p>
-    <h5 class="text-center font-weight-bold"> So, What's your pick for today? Click to add items to cart!</h5>
-    <br>
-    
+    <p style="margin-top:-0.7rem;"> <span class="font-weight-bold"> Our Timings: </span> {{store_timings.store_timings}} </p>
+    {% if status == "Offline" %}
+    <h5 class="text-center bg-danger p-2 text-white mb-4"> Store is currently offline. We'll soon be back with you.</h5>
     <div class="row">
         <div class="col-sm-3 justify-content-center text-center">
-            <div class="list-group">
-                <a href="{% url 'user-view' %}" class="list-group-item list-group-item-action" aria-current="true">
+            <a class="category-drop list-group nav-item dropdown-toggle text-light list-group-item list-group-item-action bg-dark text-white rounded-lg fw-bold" href="#" id="profileDropdown" role="button" 
+            data-bs-toggle="dropdown" aria-expanded="false"> Categories </a>
+            <ul class="drop-list dropdown-menu" style="min-width:90%; max-height: 200px; overflow-y: auto;" aria-labelledby="profileDropdown">
+                <li> <a href="{% url 'user-view' %}" class=" list-group-item list-group-item-action bg-dark text-white fw-bold text-center" aria-current="true">
                     All
-                </a>
-            {% for a in title %}
-            <a href="{% url 'user-products-category' cat=a.product_category %}" class="list-group-item list-group-item-action" aria-current="true">
-                {{a.product_category}}
-            </a>
-            {% endfor %}
-	    <hr>
-            <p class="text-center">Or scan here to order<p>
+                </a> </li>
+                {% for a in title %}
+                <li>
+                    <a href="{% url 'user-products-category' cat=a.product_category %}" class="p-1 list-group-item list-group-item-action text-black fw-bold text-center" aria-current="true">
+                        {{a.product_category}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+	          <hr>
+            <p class="text-center">Scan to order through phone<p>
             
             {% for qr in qrcode %}
-              <img src="{{ qr.qrcode.url }}" width="150vh" height="150vh" alt="QR CODE"/>
+              <img src="{{ qr.qrcode.url }}" class="qrimg" alt="QR CODE"/>
             {% endfor %}
-        </div>
         </div>
         <div class="col-sm-9">
             <div class="row">
                 {% for prod in product %}
-                    <div class="col text-center mb4">
-                            <a href="{% url 'add-to-cart' pid=prod.productid %}" class="btn">
-                                <div>
-                                    <img src="{{prod.product_image.url}}" width="200px" height="130px" alt=""/>
+                    <div class="col text-center">
+                                <div class=" btn m-0 ">
+                                    <img class="productimg shadow rounded-lg" src="{{prod.product_image.url}}" alt=""/>
                                     <div class="fw-bold">{{prod.product_name}}</div>
                                     <div class="fw-bold">
                                         Rs.{{prod.product_price}}/-
                                     </div>
                                 </div>
-                            </a>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+
+    {% elif status == "Online" %}
+    <h5 class="text-center bg-dark p-2 text-white font-weight-bold"> What's your pick for today? <br> Click to add items to cart!</h5>
+    <br>
+    <div class="row">
+      <div class="col-sm-3 justify-content-center text-center">
+          <a class="category-drop list-group nav-item dropdown-toggle text-light list-group-item list-group-item-action bg-dark text-white rounded-lg fw-bold" href="#" id="profileDropdown" role="button" 
+          data-bs-toggle="dropdown" aria-expanded="false"> Categories </a>
+          <ul class="drop-list dropdown-menu" style="min-width:90%; max-height: 200px; overflow-y: auto;" aria-labelledby="profileDropdown">
+              <li> <a href="{% url 'user-view' %}" class=" list-group-item list-group-item-action bg-dark text-white fw-bold text-center" aria-current="true">
+                  All
+              </a> </li>
+              {% for a in title %}
+              <li>
+                  <a href="{% url 'user-products-category' cat=a.product_category %}" class="p-1 list-group-item list-group-item-action text-black fw-bold text-center" aria-current="true">
+                      {{a.product_category}}
+                  </a>
+              </li>
+              {% endfor %}
+          </ul>
+          <hr>
+          <p class="text-center">Scan to order through phone<p>
+          
+          {% for qr in qrcode %}
+            <img src="{{ qr.qrcode.url }}" class="qrimg" alt="QR CODE"/>
+          {% endfor %}
+      </div>
+      <div class="col-sm-9">
+          <div class="row">
+              {% for prod in product %}
+                  <div class="col text-center">
+                          <a href="{% url 'add-to-cart' pid=prod.productid %}" class="btn m-0">
+                              <div class="">
+                                  <img class="productimg shadow rounded-lg" src="{{prod.product_image.url}}" alt=""/>
+                                  <div class="fw-bold">{{prod.product_name}}</div>
+                                  <div class="fw-bold">
+                                      Rs.{{prod.product_price}}/-
+                                  </div>
+                              </div>
+                          </a>
+                  </div>
+              {% endfor %}
+          </div>
+      </div>
+  </div>
+
+  {% endif %}
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

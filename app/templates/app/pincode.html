@@ -1,23 +1,22 @@
 {% extends "app/loginbase.html" %}
 {% load static %}
-{% block title %} Add Store {% endblock title %} 
+{% block title %} Pincode {% endblock title %} 
 
 {% block main-content %}
 
-<h1 class="welcome_line my-1">Hello Yaman!</h1>
-<h6 class="text-center">Hope you are good right!</h6><br>
-<h4 class="text-center">Let's add more stores</h4><br>
+<h1 class="welcome_line my-1">Hey Welcome!</h1>
+<h6 class="text-center my-3">Search stores near you</h6><br>
 
-<div class="container">
+<div class="container text-center">
     <div class="row my-0">
     <div class="col-sm-6 offset-sm-3">
         <form action="" method="post" novalidate class="shadow p-5" enctype="multipart/form-data">
             {% csrf_token %}
             {% for fm in form %}
-                {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                {{fm.label_tag}} <p class="my-3"> {{fm}} </p> <small class="text-danger">{{fm.errors|striptags}}</small>
                 <br>
             {% endfor %}
-            <input type="submit" value="Add" class="btn btn-primary"> <br>
+            <input type="submit" value="Search" class="btn btn-primary"> <br>
 
             {% if form.non_field_errors %}
                 {% for error in form.non_field_errors %}

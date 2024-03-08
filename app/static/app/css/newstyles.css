@@ -1,6 +1,7 @@
 body{
-    background: url("../images/back3.png");
-    background-size: auto;
+    /* background: url("../images/back3.png"); */
+    background-color: #FFC500;
+    /* background-size: auto; */
 }
 
 html {
@@ -87,16 +88,7 @@ html {
     color: rgb(255, 255, 255);
 }
 
-.social{
-    margin-top: 6rem;
-}
 
-.linkedin, .insta, .portfolio, .artfolio{
-    margin: 2rem;
-    font-weight: 500;
-    text-decoration: none;
-    color: rgb(255, 255, 255);
-}
 
 footer{
     width: 100%;

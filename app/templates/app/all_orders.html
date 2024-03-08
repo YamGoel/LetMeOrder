@@ -5,34 +5,35 @@
 {% block main-content %}
 {% block content %}
 <div class="container justify-content-center">
-<h1 class="text-center">All Orders</h1>
-    <div class="card orders">
-        <div class="card-body">
-            {% for grouping_value, orders in grouped_orders.items %}
-            <div class="row justify-content-center">
-                <div class="order-container text-white bg-dark rounded-4 mx-5 col-sm-7">
-                    <div class="text-center">
-                        {% for order in orders %}
-                                {% if forloop.first %}
-                                    <h6 class="text-body-emphasis text-warning my-2"> {{order.order_date}} </h6>
-                                {% endif %}
-                            {% endfor %}
-                            <hr class="bg-black">
-                        <div>
-                            {% for order in orders %}
-                                <div class="d-flex text-center my-1">
-                                    <h6 class="mx-1">{{ order.product_name }} :</h6>
-                                    <h6 class="mx-1"> {{ order.quantity }}</h6>
+    <h1 class="text-center">All Orders</h1>
+    <div class="card  border-0">
+        <div class="card-body orders">
+            {% for grouped_order in grouped_orders %}
+                <div class="row justify-content-center">
+                    <div class="all-order-container text-white rounded-4 mx-5 my-1 col-sm-7">
+                        <div class="">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <h6 class="text-body-emphasis text-warning my-3">{{ grouped_order.date }}</h6>
+                                    </div>
+                                    <div class="col-sm-3 total-orders">
+                                        <h6 class="my-3 total-text">Total Orders: {{ grouped_order.total_orders }}</h6>
+                                    </div>
                                 </div>
-                            {% endfor %}
-                        
-                        </div>
-                        
-                        <br>
-                    </div> 
+                            <hr style="background-color: yellow; height: 2px; margin-top:-0.5rem; border: 0;">
+
+                                <div>
+                                    {% for order in grouped_order.orders %}
+                                        <div class="d-flex text-center my-1">
+                                            <h6 class="mx-1 my-0">{{ order.product_name }} :</h6>
+                                            <h6 class="mx-1 my-0">{{ order.quantity }}</h6>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            <br>
+                        </div> 
+                    </div>
                 </div>
-            </div>
-            <hr class="text-muted">
             {% endfor %}
         </div>            
     </div>

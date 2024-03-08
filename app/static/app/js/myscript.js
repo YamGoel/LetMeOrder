@@ -55,6 +55,20 @@ $('.remove-cart').click(function(){
     })
 })
 
+$('.clear-cart').click(function(){
+    $.ajax({
+        type:"GET",
+        url:"/clearcart",
+        success:function(data){
+            document.getElementById("amount").innerText = "Rs. "+data.amount
+            var parcelamount = document.getElementById("parcel_amount").innerText
+            var p = parseInt(parcelamount)
+            document.getElementById("totalamount").innerText =  data.totalamount+p
+            window.location.reload();
+        }
+    })
+})
+
 $('.order-completed').click(function(){
     var id = $(this).attr("oid").toString()
     var eml = this
@@ -69,4 +83,33 @@ $('.order-completed').click(function(){
             eml.parentNode.parentNode.parentNode.parentNode.remove()
         }
     })
+})
+
+$('.change_status').click(function(){
+    var sid = $(this).attr("sid").toString();
+    var eml = this.innerText.trim();
+    if (eml == "Go Online"){
+        $.ajax({
+            type:"GET",
+            url:"/status/online",
+            data:{
+                storeid:sid
+            },
+            success: function(response) {
+                window.location.reload();
+            }
+        })
+    }
+    else if (eml == "Go Offline"){
+        $.ajax({
+            type:"GET",
+            url:"/status/offline",
+            data:{
+                storeid:sid
+            },
+            success: function(response) {
+                window.location.reload();
+            }
+        })
+    }
 })

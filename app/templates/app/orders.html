@@ -6,17 +6,28 @@
 {% block content %}
 <div class="container justify-content-center">
 <h1 class="text-center">Orders</h1>
-    <div class="card orders">
-        <div class="card-body">
+    <div class="card border-0">
+        <div class="card-body orders">
             {% for grouping_value, orders in grouped_orders.items %}
             <div class="row justify-content-center">
-                <div class="order-container text-white bg-dark rounded-4 mx-5 col-sm-7">
-                    {% for order in orders %}
-                        {% if forloop.first %}
-                        <h4 class="text-body-emphasis text-warning my-2">Order Number: {{order.ordernumber}}</h4>
-                        {% endif %}
-                    {% endfor %}
-                    <hr class="bg-black">
+                <div class="order-container text-white bg-dark rounded-4 mx-5 my-1 col-sm-7">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            {% for order in orders %}
+                                {% if forloop.first %}
+                                <h5 class="text-body-emphasis text-warning my-3 mx-2">Order Number: {{order.ordernumber}}</h5>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-sm-3">
+                            {% for order in orders %}
+                                {% if forloop.first %}
+                                <h6 class="text-body-emphasis text-white order-date">{{order.order_date}}</h6>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr style="background-color: black; height: 1px; margin-top:-0.4rem; border: 0;">
                     <div class="d-flex">
                         <div>
                             {% for order in orders %}
@@ -31,9 +42,9 @@
                             <hr class="bg-black">
                             {% for order in orders %}
                                 {% if order.parcel == 'Yes' and forloop.first %}
-                                    <h6 class="mx-2">Parcel: Yes</h6>
+                                    <h6 class="mx-2" style="margin-top:-0.4rem;">Parcel: Yes</h6>
                                 {% elif order.parcel == 'No' and forloop.first %}
-                                    <h6 class="mx-2">Parcel: No</h6>
+                                    <h6 class="mx-2" style="margin-top:-0.4rem;">Parcel: No</h6>
                                 {% endif %}
                             {% endfor %}
                         </div>

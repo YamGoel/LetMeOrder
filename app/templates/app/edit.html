@@ -19,12 +19,12 @@
         <div class="col-sm-9">
             
             <div class="row">
-                <h3> Choose a product to edit </h3>
+                <h4 class="justify-content-center text-center my-2 font-monospace"> Choose a product to edit </h4>
                 {% for prod in product %}
                     <div class="col text-center mb4">
                             <a href="{% url 'edit-product' id=prod.productid %}" class="btn">
                                 <div>
-                                    <img src="{{prod.product_image.url}}" width="200px" height="130px" alt=""/>
+                                    <img class="productimg" src="{{prod.product_image.url}}" alt=""/>
                                     <div class="fw-bold">{{prod.product_name}}</div>
                                     <div class="fw-bold">
                                         Rs.{{prod.product_price}}/-

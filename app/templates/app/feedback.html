@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}" />
     <link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
@@ -14,86 +15,98 @@
         }
 
         .feeback-box {
-            background-color: #262626;
+            background-color: #ffffff;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .feeback-box h1 {
-            color: #343a40; /* Bootstrap dark text color */
+            color: #ffffff; /* Bootstrap dark text color */
         }
 
         .btn-outline-dark {
-            border-color: #343a40; /* Bootstrap dark border color */
-            color: #343a40; /* Bootstrap dark text color */
+            background-color: #343a40;
+             /* Bootstrap dark border color */
+            color: #ffffff; /* Bootstrap dark text color */
         }
 
         .btn-outline-dark:hover {
-            background-color: #343a40; /* Bootstrap dark background color on hover */
+            border-color: #343a40; /* Bootstrap dark background color on hover */
             color: #ffffff; /* White text on hover */
+        }
+        .nav.row.my-2 {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .nav-item {
+            flex: 1 1 auto;
+            min-width: 0; /* Ensure flex items can shrink */
+            word-wrap: break-word; /* Allow words to break and wrap */
+            overflow-wrap: break-word; /* Additional wrapping control */
         }
     </style>
 </head>
-<body>
+<body style="background-color:#ffffff;">
     <ul class="nav justify-content-center my-3">
-        <li class="nav-item">
-          <a class="btn btn-outline-dark" aria-current="page" href="/">Home</a>
+        <li class="nav-item text-center">
+          <a class="btn btn-outline-dark fw-bold" aria-current="page" href="/">Home</a>
         </li>
     </ul>
+    <div class="row">
+        <div class="container col-sm-4 text-center text-white">
+            <h1 class="my-1 text-dark fw-bold" >Feedback Form</h1>
+            <h6 class="text-dark">Your feedback helps us grow</h6>
 
-    <div class="container text-center text-white feeback-box">
-        <h1 class="my-1 text-warning" style="font-family: 'Baskerville', serif; font-weight: 800;">Feedback Form</h1>
-        <h6>Your feedback helps us grow</h6>
-        <h6>Kindly provide your valuable opinion</h6>
-
-        <div class="row mt-3">
-            <div class="col-md-6 offset-md-3 text-black " style="font-family: 'Baskerville', serif; font-weight: 800;">
-                <form action="" method="post" novalidate class="shadow p-4">
-                    {% csrf_token %}
-                    {% for fm in form %}
-                        <div class="mb-3">
-                            {{ fm.label_tag }} <br>
-                            {{ fm }}
-                            <small class="text-danger">{{ fm.errors|striptags }}</small>
-                        </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
-                
-                    {% if form.non_field_errors %}
-                        {% for error in form.non_field_errors %}
-                            <p class="alert alert-danger my-3">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                
-                    {% if messages %}
-                        {% for msg in messages %}
-                            <div class="alert alert-{{ msg.tags }} my-3" role="alert">
-                                {{ msg }}
+            <div class="row mt-3">
+                <div class="col-md-10 offset-md-1 text-black " style="font-family: 'Baskerville', serif; font-weight: 800;">
+                    <form action="" method="post" novalidate class="shadow p-4">
+                        {% csrf_token %}
+                        {% for fm in form %}
+                            <div class="mb-3">
+                                {{ fm.label_tag }} <br>
+                                {{ fm }}
+                                <small class="text-danger">{{ fm.errors|striptags }}</small>
                             </div>
                         {% endfor %}
-                    {% endif %}
-                </form>
+                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <p class="alert alert-danger my-3">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <div class="alert alert-{{ msg.tags }} my-3" role="alert">
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </form>
+                </div>
             </div>
-            <br>
-            <h5 class="my-3 text-warning" style="font-family: 'Baskerville', serif; font-weight: 800;">Feedbacks</h5>
-            <br>
-            <ul class="nav row my-3">
-                <li class="nav-item mx-3 my-1 col-sm-2 bg-danger">Name</li>
-                <li class="nav-item mx-3 my-1 col-sm-3 bg-primary">Email</li>
-                <li class="nav-item mx-3 my-1 col-sm-5 bg-secondary">Feedback</li>
-            </ul> 
-            {% for a in feedbacks %}
-                <ul class="nav row my-2">
-                    <li class="nav-item mx-3 col-sm-2 text-warning">{{a.name}}</li>
-                    <li class="nav-item mx-3 col-sm-3 text-info">{{a.email}}</li>
-                    <li class="nav-item mx-3 col-sm-5">{{a.feedback}}</li>
-                </ul>
-                <hr>
-            {% endfor %}
         </div>
 
+
+        <div class="col-sm-8 container mt-5 overflow-auto" style="padding-right:1rem; border-left:4px solid grey; max-height:70vh;">
+            <h4 class="my-3 mx-1 text-dark" >Feedbacks</h4>
+                <ul class="nav row my-2">
+                    <li class="nav-item mx-3 my-1 fw-bold text-white col-sm-2 bg-secondary">Name</li>
+                    <li class="nav-item mx-3 my-1 fw-bold text-white col-sm-3 bg-secondary">Email</li>
+                    <li class="nav-item mx-3 my-1 fw-bold text-white col-sm-5 bg-secondary">Feedback</li>
+                </ul> 
+                {% for a in feedbacks %}
+                    <ul class="nav row my-2">
+                        <li class="nav-item mx-3 fw-bold col-sm-2 text-dark">{{a.name}}</li>
+                        <li class="nav-item mx-3 col-sm-3 text-dark">{{a.email}}</li>
+                        <li class="nav-item mx-3 col-sm-5">{{a.feedback}}</li>
+                    </ul>
+                    <hr>
+                {% endfor %}
+        </div>
     </div>
 </body>
 </html>

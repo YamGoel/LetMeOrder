@@ -1,6 +1,7 @@
 body{
-    background: url("../images/back3.png");
-    background-size: auto;
+    /* background: url("../images/back3.png"); */
+    background-color: #FFC500;
+    /* background-size: auto; */
 
 }
 
@@ -62,6 +63,7 @@ html{
 .homeboy{
     height: 50%;
     width: 100%;
+    margin-top: -2.5rem;
 }
 
 footer{
@@ -74,6 +76,7 @@ footer{
     background-image: linear-gradient(to right, rgb(60, 60, 60), rgb(0, 0, 0), rgb(0, 0, 0), rgb(60, 60, 60));
     border-radius: 40px;
     height: 55vh;
+    overflow: hidden;
 }
 
 @media screen and (max-width: 600px){
@@ -89,7 +92,8 @@ footer{
 
 /* Orders */
 .orders{
-    background: url("../images/back3.png");
+    /* background: url("../images/back3.png"); */
+    background-color: #D2F1FF;
     border: 0px;
 }
 
@@ -102,4 +106,112 @@ footer{
     width: 150px; /* Adjust the width as needed */
     height: 30px; /* Adjust the height as needed */
     font-size: 12px; /* Adjust the font size as needed */
+}
+
+.order-date{
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 600px){
+    .order-date{
+        font-size: 12px;
+        margin-left: 0.6rem;
+        margin-top: -0.5rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+
+/* All Orders */
+.all-order-container{
+    background-color: rgb(42, 42, 42);
+    height: 4rem;
+    overflow: hidden;
+    transition: height 1s;
+  }
+
+.all-order-container:hover{
+    background-color: rgb(42, 42, 42);
+    height: fit-content;
+}
+
+@media screen and (max-width: 600px){
+    .total-orders{
+        margin-top: -1.6rem;
+    }
+    .total-text{
+        font-size: 12px;
+    }
+    .all-order-container{
+        background-color: rgb(42, 42, 42);
+        height: 5rem;
+        overflow: hidden;
+        transition: height 1s;
+      }
+}
+
+@media screen and (max-width: 1000px){
+    .total-text{
+        font-size: 13px;
+    }
+    .all-order-container{
+        background-color: rgb(42, 42, 42);
+        height: 4rem;
+        overflow: hidden;
+        transition: height 1s;
+      }
+}
+
+.storebtn{
+    width: 20%;
+    min-width: 20%;
+    width: max-content;
+    max-width: 90%;
+    min-height: 100px;
+    height: max-content;
+    padding: 2rem;
+    
+}
+
+@media screen and (max-width: 600px){
+    .storebtn{
+        min-width: 45%;
+        width: max-content;
+        max-width: 90%;
+        min-height: 80px;
+        height: max-content;
+        max-height: max-content;
+        padding: 2rem;
+    }
+}
+
+.productimg{
+    width: 170px;
+    height: 120px;
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+
+.qrimg{
+    width: 150px;
+    height: 150px;
+}
+
+@media screen and (max-width: 600px){
+    .productimg{
+        width: 130px;
+        height: 90px;
+        margin-left: -1rem;
+        margin-right: -1rem;
+    }
+
+    .qrimg{
+        width: 100px;
+        height: 100px;
+        margin-top: -0.5rem;
+    }
+}
+
+.addform{
+    border-radius: 30px;
 }

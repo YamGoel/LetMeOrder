@@ -1,0 +1,53 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} Profile {% endblock title %}
+
+{% block main-content %}
+<br>
+<div class="detail-container container">
+    <div class="details-page row flex justify-content-between">
+        <div class = "col-sm-6 bg-white rounded-3 my-2 h-75">
+            <h2 class=" text-center text-dark fw-bold py-3 my-2" style="font-family:Cambria;">Your Profile</h2>
+            <div class="productdetail px-5 fw-bold text-dark my-2 py-2">
+                <h5 style="font-family:Cambria; font-weight:600;"> Store Name: <h5 style="font-family:Cambria; font-weight:400; color:grey;"> {{profile.store_name}} </h5> </h5>
+                <h5 style="font-family:Cambria; font-weight:600;">Address: <h5 style="font-family:Cambria; font-weight:400; color:grey;"> {{profile.store_address}}</h5></h5>
+                <h5 style="font-family:Cambria; font-weight:600;">Pincode: <h5 style="font-family:Cambria; font-weight:400; color:grey;"> {{profile.store_pincode}}</h5></h5>
+                <h5 style="font-family:Cambria; font-weight:600;">Timings: <h5 style="font-family:Cambria; font-weight:400; color:grey;"> {{profile.store_timings}}</h5></h5>
+                <h5 style="font-family:Cambria; font-weight:600;">Category: <h5 style="font-family:Cambria; font-weight:400; color:grey;"> {{profile.category}}</h5></h5>
+            </div>
+        </div>
+        <div class="col-sm-6 mb-4 ">
+            <div class="col-sm-12 my-2 ">
+                <form action="" method="post" novalidate class="addform shadow-lg py-3 rounded-3 bg-white px-5" enctype="multipart/form-data">
+                    <h2 class=" text-center text-dark fw-bold my-2" style="font-family:Cambria;">Update Profile</h2>
+                    {% csrf_token %}
+                    <div class="text-center input-group-sm">
+    
+                        {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                                <p class="alert alert-danger">{{error}}</p>
+                            {% endfor %}
+                        {% endif %}
+    
+                        {% if messages %}
+                        {% for msg in messages %}
+                            <div class="alert alert-{{msg.tags}}" role="alert">
+                                {{msg}}
+                            </div>
+                        {% endfor %}
+                        {% endif %}
+                
+                    {% for fm in form %}
+                        <p class="text-dark" style="font-weight: 600;">{{fm.label_tag}} </p>  {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                        <br>
+                    {% endfor %}
+                    <input type="submit" value="Save Changes" class="btn btn-primary"> <br>
+    
+                    
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}

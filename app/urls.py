@@ -6,6 +6,8 @@ from django.conf.urls import handler404, handler500
 
 urlpatterns = [
     path('', views.home),
+    path('status/online/', views.status_online),
+    path('status/offline/', views.status_offline),
     path('addstore/', views.addStoreView.as_view(), name="addStore"),
     path('termsandconditions/', views.termsView.as_view(), name="termsandco"),
     path('privacypolicy/', views.privacyView.as_view(), name="privacypolicy"),
@@ -14,6 +16,9 @@ urlpatterns = [
     path('offer/', views.offerView.as_view(), name="offer"),
     path('feedback/', views.feedbackView.as_view(), name="feedback"),
     path('userfeedback/', views.userFeedbackView.as_view(), name="userfeedback"),
+    path('analytics/', views.analyticsView.as_view(), name="analytics"),
+    path('profile/', views.profileView.as_view(), name="profile"),
+    path('pincode/', views.pincodeView.as_view(), name="pincode"),
 
     ###STORE###
     path('store/<slug:storeID>', views.store.as_view(),name="store"),
@@ -46,6 +51,7 @@ urlpatterns = [
     path('pluscart/', views.plus_cart),
     path('minuscart/', views.minus_cart),
     path('removecart/', views.remove_cart),
+    path('clearcart/', views.clear_cart),
     
     
     path('ordercompleted/', views.order_completed),

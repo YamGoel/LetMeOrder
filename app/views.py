@@ -11,10 +11,14 @@ from . models import Orders
 from . models import CompletedOrders
 from . models import Feedback
 from django.db import models
-from . forms import AddProductForm, FeedbackForm, LoginForm, MyPasswordResetForm, EditProductForm, SetupStoreForm, AddStoreForm
+from . forms import AddProductForm, LoginForm, FeedbackForm, MyPasswordResetForm, EditProductForm, SetupStoreForm, AddStoreForm
+from . forms import pincodeForm, EditProfileForm
 from django.contrib import messages
 from django.conf import settings
 from datetime import datetime
+from django.db.models import Sum, Count
+from django.db.models.functions import ExtractWeekDay
+import plotly.graph_objs as go
 
 ########## HOME ######
 def home(request):
@@ -22,16 +26,42 @@ def home(request):
 
 ########  STORE SIDE VIEW ########
 
+### Store Status ###
+
+def status_online(request):
+    if request.method == 'GET':
+        storeID = request.GET['storeid']
+        check_status = Store.objects.get(storeid=storeID)
+        check_status.status = "Online"
+        check_status.save()
+        add = "/store/"+storeID
+        return redirect(add)
+    
+def status_offline(request):
+    if request.method == 'GET':
+        storeID = request.GET['storeid']
+        check_status = Store.objects.get(storeid=storeID)
+        check_status.status = "Offline"
+        check_status.save()
+        add = "/store/"+storeID
+        return redirect(add)
+
+### Store Home ###
 
 class store(View):
     def get(self, request, storeID):
         form = AddProductForm()
-        store_name = request.session.get('store_name')
-        if 'storeid' not in request.session:
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
+        status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+        backpass = Store.objects.filter(storeid=storeID).values('password').first()
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
-        return render(request, "app/store.html",{'storeID':storeID, 'store_name':store_name, 'form':form})
+        return render(request, "app/store.html",locals())
     def post(self,request, storeID):
         form = AddProductForm(request.POST, request.FILES, storeID)
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
+        status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+        backpass = Store.objects.filter(storeid=storeID).values('password').first()
         if form.is_valid():
             product = Product(
                 storeid = storeID,
@@ -49,8 +79,8 @@ class store(View):
 class setupStore(View):
     def get(self, request):
         form = SetupStoreForm()
-        store_name = request.session.get('store_name')
-        if 'storeid' not in request.session:
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         return render(request, 'app/setupstore.html', locals())
@@ -82,6 +112,8 @@ class addStoreView(View):
             store_username = request.POST['store_username']
             store_name = request.POST['store_name']
             store_address = request.POST['store_address']
+            store_pincode = request.POST['store_pincode']
+            store_timings = request.POST['store_timings']
             password = request.POST['password']
             category = request.POST['category']
             qrcode= request.FILES.get('qrcode')
@@ -94,6 +126,8 @@ class addStoreView(View):
                 store_username=store_username,
                 store_name=store_name,
                 store_address=store_address,
+                store_pincode=store_pincode,
+                store_timings=store_timings,
                 password=password,
                 category=category,
 		qrcode=qrcode,
@@ -103,9 +137,23 @@ class addStoreView(View):
             messages.warning(request,"Input Valid Data")
         return render(request, "app/addstore.html",locals())
 
+class pincodeView(View):
+    def get(self, request):
+        form = pincodeForm()
+        return render(request, 'app/pincode.html', locals())
+    def post(self,request):
+        form = pincodeForm(request.POST)
+        if form.is_valid():
+            pincode = request.POST['enter_pincode']
+            store = Store.objects.filter(store_pincode = pincode)
+            return render(request, "app/localstores.html",locals())
+        else:   
+            messages.warning(request,"Input Valid Data")
+        return render(request, "app/pincode.html",locals())
+
 class editView(View):
     def get(self, request):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         product = Product.objects.filter(storeid=storeID)
@@ -114,7 +162,7 @@ class editView(View):
 
 class editProductView(View):
     def get(self, request, id):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         request.session['id'] = id
@@ -141,16 +189,18 @@ class editProductView(View):
                 if (product_image):
                     product.product_image = product_image
                 product.save()
-                messages.success(request, "Product edited successfully.")
             else:
                 messages.warning(request, "Invalid Input.")
         else:
             messages.warning(request, "Input Valid Data")
-        return render(request, "app/edit_product.html", {'editform': editform})
+        storeID = request.session.get('storeid')
+        product = Product.objects.filter(storeid=storeID)
+        title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
+        return render(request, "app/edit.html", locals())
 
 class deleteProductView(View):
     def get(self, request, pid):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         delproduct = Product.objects.filter(productid=pid)
@@ -161,7 +211,7 @@ class deleteProductView(View):
 
 class productView(View):
     def get(self, request):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         product = Product.objects.filter(storeid=storeID)
@@ -170,7 +220,7 @@ class productView(View):
     
 class productCategoryView(View):
     def get(self, request, cat):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         product = Product.objects.filter(storeid=storeID, product_category=cat)
@@ -182,42 +232,59 @@ class userView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        store_name = request.session.get('store_name')
-        store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
-        ######################
-        if 'orderid' not in request.session:
-            orderid = random.randint(10000000, 99999999)
-            request.session['orderid'] = orderid
-            print(orderid)
-        ######################
-        product = Product.objects.filter(storeid=storeID)
-        qrcode = Store.objects.filter(storeid=storeID)
-        title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", locals())
+        check = Store.objects.filter(storeid=storeID)
+        if check:
+            store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
+            status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+            store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
+            store_timings = Store.objects.filter(storeid=storeID).values('store_timings').first()
+            backpass = Store.objects.filter(storeid=storeID).values('password').first()
+            ######################
+            if 'orderid' not in request.session:
+                orderid = random.randint(10000000, 99999999)
+                request.session['orderid'] = orderid
+            ######################
+            product = Product.objects.filter(storeid=storeID)
+            qrcode = Store.objects.filter(storeid=storeID)
+            title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
+            return render(request, "app/userview.html", locals())
+        else:
+            return render(request, "app/sorry.html", locals())
 
 class qrUserView(View):
     def get(self, request, storeID):
         request.session['storeid'] = storeID
-        store_name = Store.objects.filter(storeid=storeID).values('store_name')
-        store_address = Store.objects.filter(storeid=storeID).values('store_address')
-        ######################
-        if 'orderid' not in request.session:
-            orderid = random.randint(10000000, 99999999)
-            request.session['orderid'] = orderid
-        ######################
-        product = Product.objects.filter(storeid=storeID)
-        qrcode = Store.objects.filter(storeid=storeID)
-        title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", locals())
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
+        check = Store.objects.filter(storeid=storeID)
+        if check:
+            store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
+            status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+            store_timings = Store.objects.filter(storeid=storeID).values('store_timings').first()
+            backpass = Store.objects.filter(storeid=storeID).values('password').first()
+            ######################
+            if 'orderid' not in request.session:
+                orderid = random.randint(10000000, 99999999)
+                request.session['orderid'] = orderid
+            ######################
+            product = Product.objects.filter(storeid=storeID)
+            qrcode = Store.objects.filter(storeid=storeID)
+            title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
+            return render(request, "app/userview.html", locals())
+        else:
+            return render(request, "app/sorry.html", locals())
 
 class userProductCategoryView(View):
     def get(self, request, cat):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        store_name = request.session.get('store_name')
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
         product = Product.objects.filter(storeid=storeID, product_category=cat)
         qrcode = Store.objects.filter(storeid=storeID)
+        backpass = Store.objects.filter(storeid=storeID).values('password').first()
+        status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+        store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
+        store_timings = Store.objects.filter(storeid=storeID).values('store_timings').first()
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
         return render(request, "app/userview.html", locals())
 
@@ -238,7 +305,7 @@ class cartView(View):
         for p in cartitems:
             p.parcel = parcel
             p.save()
-            value = int(p.quantity) * int(p.product_price)
+            value = float(p.quantity) * float(p.product_price)
             amount = amount + value
         totalamount = amount + parcelamount
         return render(request, "app/cart.html", locals())
@@ -257,7 +324,7 @@ class cartParcelView(View):
         for p in cartitems:
             p.parcel = parcel
             p.save()
-            value = int(p.quantity) * int(p.product_price)
+            value = float(p.quantity) * float(p.product_price)
             amount = amount + value
         totalamount = amount + parcelamount
         return render(request, "app/cart.html", locals())
@@ -284,6 +351,10 @@ def payment_done(request):
     else:
         order_number = 1
     request.session['ordernumber'] = order_number
+    storeinfo = Store.objects.filter(storeid=storeID).first()
+    request.session['storename'] = str(storeinfo)
+    order_date = current_date.strftime("%d/%m/%Y")
+    request.session['curdate'] = str(order_date)
     for c in cart:
         pro = Product.objects.filter(storeid=storeID, productid = c.productid).first()
         Orders(storeid=storeID, orderid = order_id, ordernumber = order_number, productid = c.productid, product_name = pro.product_name, quantity = c.quantity, order_date = current_date, parcel = parcel, payment = payment).save()
@@ -295,7 +366,6 @@ class placedView(View):
         if 'storeid' not in request.session:
             return redirect('/login/')
         storeID = request.session.get('storeid')
-        # del request.session['orderid']
         return render(request, 'app/placed.html', locals())
 
 class parcelView(View):
@@ -318,18 +388,18 @@ class payView(View):
         amount = 0
         for p in cartitems:
             if p.parcel == 'Yes':
-                value = int(p.quantity) * int(p.product_price)
+                value = float(p.quantity) * float(p.product_price)
                 amount = amount + value
                 flag = 1
             else:
-                value = int(p.quantity) * int(p.product_price)
+                value = float(p.quantity) * float(p.product_price)
                 amount = amount + value
                 flag = 0
         if flag == 1:
             totalamount = amount+5
         else:
             totalamount = amount
-        razoramount = int(totalamount*100)
+        razoramount = float(totalamount*100)
         keys = Store.objects.filter(storeid = storeID).first()
         keyid = keys.rkeyid
         if keyid != "":
@@ -355,16 +425,19 @@ class payView(View):
 def add_to_cart(request, pid):
     storeID = request.session.get('storeid')
     orderid = request.session.get('orderid')
-    print(orderid)
     check = Cart.objects.filter(storeid = storeID, productid = pid, orderid = orderid).exists()
     if check:
-        store_name = request.session.get('store_name')
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
         product = Product.objects.filter(storeid=storeID)
         qrcode = Store.objects.filter(storeid=storeID)
+        backpass = Store.objects.filter(storeid=storeID).values('password').first()
+        status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+        store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
+        store_timings = Store.objects.filter(storeid=storeID).values('store_timings').first()
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", {'product' : product, 'qrcode':qrcode, 'title':title, 'already_added': True, 'store_name':store_name})
+        return render(request, "app/userview.html", {'product' : product, 'qrcode':qrcode, 'title':title, 'already_added': True, 'store_name':store_name,'backpass':backpass, 'store_address':store_address, 'store_timings':store_timings,'status':status})
     else:
-        store_name = request.session.get('store_name')
+        store_name = Store.objects.filter(storeid=storeID).values_list('store_name', flat=True).first()
 
         
         ###########ADD RANDOM ID##############
@@ -385,8 +458,12 @@ def add_to_cart(request, pid):
         cart.save()
         product = Product.objects.filter(storeid=storeID)
         qrcode = Store.objects.filter(storeid=storeID)
+        backpass = Store.objects.filter(storeid=storeID).values('password').first()
+        status = Store.objects.filter(storeid=storeID).values_list('status', flat=True).first()
+        store_address = Store.objects.filter(storeid=storeID).values('store_address').first()
+        store_timings = Store.objects.filter(storeid=storeID).values('store_timings').first()
         title = Product.objects.filter(storeid=storeID).values('product_category').distinct()
-        return render(request, "app/userview.html", {'product' : product,'qrcode': qrcode, 'title':title, 'added': True, 'store_name':store_name})
+        return render(request, "app/userview.html", {'product' : product,'qrcode': qrcode, 'title':title, 'added': True, 'store_name':store_name,'backpass':backpass, 'store_address':store_address,'store_timings':store_timings,'status':status})
 
 def plus_cart(request):
     if request.method == 'GET':
@@ -399,7 +476,7 @@ def plus_cart(request):
         cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
-            value = int(p.quantity) * int(p.product_price)
+            value = float(p.quantity) * float(p.product_price)
             amount = amount + value
         totalamount = amount
         data={
@@ -421,7 +498,7 @@ def minus_cart(request):
         cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
-            value = int(p.quantity) * int(p.product_price)
+            value = float(p.quantity) * float(p.product_price)
             amount = amount + value
         totalamount = amount
         data={
@@ -441,13 +518,27 @@ def remove_cart(request):
         cartdata = Cart.objects.filter(storeid=storeID, orderid = orderid)
         amount = 0
         for p in cartdata:
-            value = int(p.quantity) * int(p.product_price)
+            value = float(p.quantity) * float(p.product_price)
             amount = amount + value
         totalamount = amount
         data={
             'quantity':cartitem.quantity,
             'amount':amount,
             'totalamount':totalamount
+        }
+        return JsonResponse(data)
+    
+def clear_cart(request):
+    if request.method == 'GET':
+        storeID = request.session.get("storeid")
+        orderid = request.session.get('orderid')
+        cartitems = Cart.objects.filter(storeid=storeID, orderid = orderid)
+        cartitems.delete()
+        totalamount = 0
+        data={
+            'quantity':0,
+            'amount':0,
+            'totalamount':0
         }
         return JsonResponse(data)
 
@@ -469,7 +560,7 @@ def order_completed(request):
 
 class ordersView(View):
     def get(self, request):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
         storeID = request.session.get('storeid')
         orders = Orders.objects.filter(storeid=storeID).order_by('orderid')
@@ -483,17 +574,25 @@ class ordersView(View):
     
 class allOrdersView(View):
     def get(self, request):
-        if 'storeid' not in request.session:
+        if 'storeid' not in request.session or 'password' not in request.session :
             return redirect('/login/')
+        
         storeID = request.session.get('storeid')
-        orders = CompletedOrders.objects.filter(storeid=storeID).order_by('orderid')
+        orders = CompletedOrders.objects.filter(storeid=storeID).order_by('-order_date', 'orderid')
+
         grouped_orders = {}
-        for order in reversed(orders):
-            grouping_value = order.orderid
-            if grouping_value not in grouped_orders:
-                grouped_orders[grouping_value] = []
-            grouped_orders[grouping_value].append(order)
-        return render(request, 'app/all_orders.html', {'grouped_orders': grouped_orders})
+        for order in orders:
+            grouping_key = order.order_date
+            if grouping_key not in grouped_orders:
+                grouped_orders[grouping_key] = {'date': order.order_date, 'orders': []}
+            grouped_orders[grouping_key]['orders'].append(order)
+
+        for date, data in grouped_orders.items():
+            total_orders = CompletedOrders.objects.filter(storeid=storeID, order_date=date).aggregate(Sum('quantity'))
+            data['total_orders'] = total_orders['quantity__sum']
+
+        grouped_orders_list = list(grouped_orders.values())
+        return render(request, 'app/all_orders.html', {'grouped_orders': grouped_orders_list})
 
 ######### Authentication ##########
     
@@ -513,8 +612,8 @@ class LoginView(View):
                 object = store.first()
                 storename = object['store_name']
                 request.session['storeid'] = storeid
+                request.session['password'] = password
                 request.session['store_name'] = storename
-                print(request.session.get('storeid'))
 
                 u = f'/store/{storeid}'
                 return redirect(u)
@@ -527,6 +626,7 @@ class LogoutView(View):
         if 'storeid' not in request.session:
             return redirect('/')
         del request.session['storeid']
+        del request.session['password']
         return render(request, 'app/home.html',locals())
 
 class PasswordResetView(View):
@@ -573,11 +673,11 @@ class contactView(View):
 class refundView(View):
     def get(self, request):
         return render(request, 'app/refund.html') 
-    
+
 class offerView(View):
     def get(self, request):
         return render(request, 'app/offerpage.html') 
-    
+
 class feedbackView(View):
     def get(self, request):
         form = FeedbackForm()
@@ -597,7 +697,7 @@ class feedbackView(View):
         else:
             messages.warning(request,"Input Valid Data")
         return render(request, "app/feedback.html",{'form':form, 'feedbacks':feedbacks})
-    
+
 class userFeedbackView(View):
     def get(self, request):
         form = FeedbackForm()
@@ -617,3 +717,85 @@ class userFeedbackView(View):
         else:
             messages.warning(request,"Input Valid Data")
         return render(request, "app/userfeedback.html",{'form':form, 'feedbacks':feedbacks})
+    
+class analyticsView(View):
+    def get(self, request):
+        if 'storeid' not in request.session or 'password' not in request.session:
+            return redirect('/login/')
+        storeID = request.session.get("storeid")
+
+        ##### HISTOGRAM #####
+        completed_orders = CompletedOrders.objects.filter(storeid=storeID)
+        orders_by_day = completed_orders.annotate(day_of_week=ExtractWeekDay('order_date')).values('day_of_week').annotate(total=Count('id'))
+        # print(orders_by_day)
+        days_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        orders_by_day_dict = {day: 0 for day in days_of_week}
+        orders_by_day_ = {day: 0 for day in days_of_week}
+        for order in completed_orders:
+            day_of_week = order.order_date.strftime('%A')
+            orders_by_day_dict[day_of_week] += 1
+            orders_by_day_[day_of_week] += 1
+        print(orders_by_day_dict)
+        # Pre-compute height of bars
+        max_count = max(orders_by_day_dict.values())
+        try:
+            for day, count in orders_by_day_dict.items():
+                orders_by_day_dict[day] = int(count / max_count * 100)  # Normalize to percentage
+        except:
+            pass
+
+        # Get top 3 selling products based on total quantity sold
+        top_product_counts = completed_orders.values('productid', 'product_name').annotate(count=Sum('quantity')).order_by('-count')[:3]
+        top_data = []
+        if top_product_counts.exists():
+            top_data = [(item['product_name'], item['count']) for item in top_product_counts]
+
+        # Get least 3 selling products based on total quantity sold
+        least_product_counts = completed_orders.values('productid', 'product_name').annotate(count=Sum('quantity')).order_by('count')[:3]
+        least_data = []
+        if least_product_counts.exists():
+            least_data = [(item['product_name'], item['count']) for item in least_product_counts]
+
+        ##### Total Sales #####
+        all_product_quantities = completed_orders.values('productid').annotate(total_quantity=Sum('quantity'))
+        total_sales = []
+        for item in all_product_quantities:
+            product = Product.objects.get(productid=item['productid'])
+            total_sales.append({'product_name': product.product_name, 'total_quantity': item['total_quantity']})
+
+        return render(request, 'app/analytics.html', locals())
+    
+
+class profileView(View):
+    def get(self, request):
+        if 'storeid' not in request.session:
+            return redirect('/login/')
+        storeID = request.session.get('storeid')
+        form = EditProfileForm()
+        profile = Store.objects.get( storeid = storeID )
+        return render(request, "app/storeprofile.html",locals())
+    def post(self,request):
+        form = EditProfileForm(request.POST, request.FILES)
+        storeID = request.session.get('storeid')
+        profile = Store.objects.get( storeid = storeID )
+        if form.is_valid():
+            store_name = request.POST['store_name']
+            store_address = request.POST['store_address']
+            store_pincode = request.POST['store_pincode']
+            store_timings = request.POST['store_timings']
+            category = request.POST['category']
+            store = Store.objects.filter(storeid = storeID).first()
+            if (store_name != ""):
+                store.store_name = store_name
+            if (store_address != ""):
+                store.store_address = store_address
+            if (store_pincode != ""):
+                store.store_pincode = store_pincode
+            if (store_timings != ""):
+                store.store_timings = store_timings
+            if (category != ""):
+                store.category = category
+            store.save()
+            messages.success(request, "Profile Updated.")
+            profile = Store.objects.get( storeid = storeID )
+        return render(request, "app/storeprofile.html",locals())

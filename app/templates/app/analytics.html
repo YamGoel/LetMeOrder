@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/newstyles.css' %}" />
+	<link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
+    <style>
+        /* CSS for histogram */
+        .histogram-container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        /* CSS for total sales */
+        .total-sales {
+            margin-top: 20px;
+        }
+        .sales-item {
+            margin-bottom: 10px;
+        }
+    </style>
+    <title>Your Analytics</title>
+</head>
+<body>
+    <ul class="nav justify-content-center my-3">
+        <li class="nav-item">
+          <a class="btn btn-dark" aria-current="page" href="{% url 'store' storeID=request.session.storeid %}">Back to Store</a>
+        </li>
+      </ul>
+     <!-- Sales by Day of the Week -->
+    <div class="histogram-container shadow bg-light rounded-4 text-center py-1">
+        <h2 class="fw-bold my-2">Sales by Day of the Week</h2>
+        <div class="d-flex px-2">
+            <div>
+                <ul>
+                    {% for day, order_count in orders_by_day_dict.items %}
+                        <li class="d-flex my-1" >{{ day }}: </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                {% for count in orders_by_day_.values %}
+                    <li class="d-flex mx-4 my-1" > {{ count }} </li>
+                {% endfor %}
+            </div>
+            <div class="w-75">
+                <ul  class="list-unstyled">
+                    {% for order_count in orders_by_day_dict.values %}
+                       <li> <p id='salesofdays' class="text-white my-1 " style="height:24px; border: 1.5px solid black; width: {{ order_count }}%; background-image: linear-gradient(43deg, #d1d8fa 0%, #ffcffc 46%, #ffcb6b 100%);"> </p></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <!-- Top Selling Products -->
+    <div class="histogram-container shadow bg-light rounded-4 text-center py-1">
+        <h2 class="fw-bold my-2">Top Selling Products</h2><br>
+        <div class="d-flex px-2 text-center row justify-content-center">            
+        {% for day, count in top_data %}
+            <div style="width: clamp(140px, 8vw, 340px); height: clamp(140px, 8vw, 340px); background-color:white; background-image: linear-gradient(43deg, #d1d8fa 0%, #ffcffc 46%, #ffcb6b 100%);" class="col-sm-2 m-3 pt-2 overflow-auto d-inline-block shadow shaadow-lg rounded-4">
+                <h5 class="fw-bold text-center overflow-auto" style="height:95px;">{{day}}</h5>
+                <h6 class="bg-dark text-white fw-bold mx-3 align-self-center" style="height:20px; width:83px; ">{{count}}</h6>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <br><br>
+    <!-- Least Selling Products -->
+    <div class="histogram-container shadow bg-light rounded-4 text-center py-1">
+        <h2 class="fw-bold my-2">Least Selling Products</h2><br>
+        <div class="d-flex px-2 text-center row justify-content-center">            
+        {% for day, count in least_data %}
+            <div style="width: clamp(140px, 8vw, 340px); height: clamp(140px, 8vw, 340px); background-color:white; background-image: linear-gradient(43deg, #d1d8fa 0%, #ffcffc 46%, #ffcb6b 100%);" class="col-sm-2 m-3 pt-2 overflow-auto d-inline-block shadow shaadow-lg rounded-4">
+                <h5 class="fw-bold text-center overflow-auto" style="height:95px;">{{day}}</h5>
+                <h6 class="bg-dark text-white fw-bold mx-3 align-self-center" style="height:20px; width:84.3px; ">{{count}}</h6>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <br><br>
+    <!-- Total Sales -->
+    <div class="histogram-container shadow bg-light rounded-4 justify-content-center py-1">
+        <h2 class="fw-bold my-2 mb-4 text-center">Total Sales by Products</h2>
+        <div class="d-flex px-2">
+            <div class="col-lg-9">
+                <ul>
+                    {% for item in total_sales %}
+                        <div class="sales-item fw-bold">{{ item.product_name }}: </div>
+                        <hr>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                {% for item in total_sales %}
+                    <div class="sales-item" style="margin-left:10rem;">{{ item.total_quantity }}</div>
+                    <hr>    
+                {% endfor %}
+            </ul>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+    <footer class="d-flex flex-wrap justify-content-center align-items-center py-2 border-top fixed-bottom"> 
+        <div class="d-flex align-items-center">
+          <span class="mb-3 mb-md-0 text-body-primary text-light">Copyright : 2023 || Developed by : YG Corp.</span>
+        </div>
+      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{% static 'app/js/myscript.js' %}" ></script>
+</body>
+</html>

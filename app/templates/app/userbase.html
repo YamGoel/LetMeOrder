@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}" />
     <link rel="shortcut icon" type="image/png" href="{% static 'app/images/favicon.png' %}" >
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <title>LetMeOrder | {% block title %}  {% endblock title %}</title>
+    <title>{% block title %}  {% endblock title %}</title>
     <script>
       history.pushState(null, null, document.URL);
       window.addEventListener('popstate', function () {
@@ -19,12 +19,20 @@
       });
   </script>
 </head> 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100" style="background-color: #FFFDEA; background-image:none;">
+    {% if status == "Offline" %}
+      <ul class="nav justify-content-center my-3">
+        <li class="nav-item">
+          <a class="btn btn-dark" aria-current="page">Cart</a>
+        </li>
+      </ul>
+      {% elif status == "Online" %}
       <ul class="nav justify-content-center my-3">
         <li class="nav-item">
           <a class="btn btn-dark" aria-current="page" href="{% url 'parcel' %}">Cart</a>
         </li>
       </ul>
+    {% endif %}
 
       {% block main-content %}
       
@@ -39,6 +47,7 @@
       <hr class="bg-black">
       <ul class="nav justify-content-center my-4">
         <li class="nav-item">
+          <div id="password" style="display: none;"> {{backpass.password}} </div>
           <a class="btn btn-success" aria-current="page" onclick="openPrompt()">Back to Store</a>
         </li>
       </ul>
@@ -46,8 +55,8 @@
       <script>
         function openPrompt() {
             var userInput = prompt('Enter the code to proceed:');
-            var storeID= "{{ request.session.storeid }}";
-            if (userInput === storeID) {
+            var backpass= document.getElementById('password').textContent.trim();
+            if (userInput.trim() === backpass) {
                 window.location.href = "{% url 'store' storeID=request.session.storeid %}";
             } else {
                 alert('Incorrect code. Please try again.');
@@ -57,7 +66,7 @@
     <br><br>
     <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top fixed-bottom"> 
       <div class="d-flex align-items-center">
-        <span class="mb-3 mb-md-0 text-body-primary text-light">© 2023, its.pixelate</span>
+        <span class="mb-3 mb-md-0 text-body-primary text-light">Copyright : 2023 || Developed by : YG Corp.</span>
       </div>
     </footer>
 

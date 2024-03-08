@@ -1,0 +1,39 @@
+{% extends "app/loginbase.html" %}
+{% load static %}
+{% block title %} Add Store {% endblock title %} 
+
+{% block main-content %}
+
+{% if store %}
+
+    <h4 class="text-center">Stores in Your Area: {{pincode}}</h4><hr>
+
+    <div class="container">
+        <div class=" row my-0 storerow">
+        <div class=" text-center">
+            {% for a in store %}
+            <a href="https://www.letmeorder.in/userview/order/{{a.storeid}}" class="btn btn-dark my-3 storebtn" aria-current="true">
+                {{a.store_name}}
+            </a>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    <br><br><br><br>
+
+{% else %}
+    <h1 class="text-center mb-3 my-4">No stores listed in your area.</h1><br><br>
+    <hr>
+    <br><br>
+    <div class="text-center">
+    <h4 class="text-center mb-2">To view a sample store, Click on the button below </h4>
+    <h6 class="text-center mb-3">*do not make any payment as it is just for sample.</h6>
+    <a class="btn btn-dark text-white w-25 text-center" href="https://www.letmeorder.in/userview/order/S1"> Sample Store </a> <br><br>
+    <hr>
+    <h5 class="my-4"> We have got a offer for you </h5>
+    <h6 class="my-2">Get the stores from your area listed with us and receive a 10% share of every deal we made through you.<h6>
+</div>
+
+{% endif %}
+
+{% endblock main-content %}
